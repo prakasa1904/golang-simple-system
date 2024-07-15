@@ -63,6 +63,7 @@ func (c *RouteConfig) SetupAPItRoute() {
 	c.Router.Route("/api", func(r chi.Router) {
 		r.Route("/member", func(r chi.Router) {
 			r.Post("/add", c.MemberAPIController.Add)
+			r.Post("/find", c.MemberAPIController.Find)
 		})
 	})
 }

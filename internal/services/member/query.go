@@ -13,7 +13,7 @@ Converter HTTP request query to repository structure
 */
 
 func ConvertQueryToLimit(url *url.URL) int {
-	var limit = 10
+	var limit = 6
 
 	limitQuery := url.Query().Get("limit")
 

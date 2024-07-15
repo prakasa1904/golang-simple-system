@@ -2,7 +2,6 @@ package http
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"net/url"
 
@@ -45,22 +44,44 @@ func (c *MemberAPIController) Add(w http.ResponseWriter, r *http.Request) {
 		c.log.Warnf("Json decoder error : %+v", err)
 	}
 
-	log.Println("payloadRegisterpayloadRegisterpayloadRegister")
-	log.Println(payloadRegister)
-	log.Println("payloadRegisterpayloadRegisterpayloadRegister")
-
 	currentURL, err := url.Parse(payloadRegister.Request.CurrentURL)
 	if err != nil {
 		c.log.Warnf("Parse payload current url error : %+v", err)
 	}
 
-	newUser, err := c.myUsecase.Create(r.Context(), payloadRegister)
+	_, err = c.myUsecase.Create(r.Context(), payloadRegister)
 	if err != nil {
 		c.log.Warnf("Find users error : %+v", err)
 	}
 
-	if newUser.ID == 0 {
-		c.log.Warnf("Failed to create new user")
+	filter := member.ConvertQueryToFilter(currentURL)
+	limit := member.ConvertQueryToLimit(currentURL)
+	order := member.ConvertQueryToOrder(currentURL)
+
+	users, err := c.myUsecase.Find(r.Context(), filter, limit, order)
+	if err != nil {
+		c.log.Warnf("Find users error : %+v", err)
+	}
+
+	c.view.Set("users", users)
+
+	err = c.view.HTML(w).RenderClean("views/pages/home/list-members.html")
+	if err != nil {
+		c.log.Warnf("RenderClean error : %+v", err)
+	}
+
+}
+
+func (c *MemberAPIController) Find(w http.ResponseWriter, r *http.Request) {
+	var payloadFind = new(member.FindRequest)
+	err := json.NewDecoder(r.Body).Decode(&payloadFind)
+	if err != nil {
+		c.log.Warnf("Json decoder error : %+v", err)
+	}
+
+	currentURL, err := url.Parse(payloadFind.CurrentURL)
+	if err != nil {
+		c.log.Warnf("Parse payload current url error : %+v", err)
 	}
 
 	filter := member.ConvertQueryToFilter(currentURL)
