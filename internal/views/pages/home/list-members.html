@@ -1,0 +1,22 @@
+<section id="home-users" class="m-4 bg-white dark:bg-gray-900">
+  <div>
+    <h2
+      class="mb-4 text-2xl tracking-tight leading-none text-gray-900 dark:text-white"
+    >
+      List Members
+    </h2>
+  </div>
+  <ul class="grid w-full gap-6 md:grid-cols-3">
+    <%= if (users && len(users) > 0) { %>
+    <!-- divider -->
+    <%= for (data) in users { %>
+    <!-- divider -->
+    <%= partial("views/components/card/index.html") %>
+    <!-- divider -->
+    <% } %>
+    <!-- divider -->
+    <% } else { %>
+    <span>Tidak ada data ditemukan.</span>
+    <% } %>
+  </ul>
+</section>

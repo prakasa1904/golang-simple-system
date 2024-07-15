@@ -1,0 +1,8 @@
+tmp
+sql_db
+
+# nodeJS modules
+node_modules
+
+# app binary
+app-boilerplate
