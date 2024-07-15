@@ -1,23 +1,26 @@
-// temp solution from https://github.com/bigskysoftware/htmx/issues/2156
-htmx.defineExtension("push-extra-query", {
+htmx.defineExtension("push-url-with-query", {
   onEvent: function (name, e) {
-    console.log(name);
     if (name === "htmx:confirm") {
       // get value from current field (such as: search field)
+      const url = e.target.getAttribute("hx-push-url-with-query");
       const name = e.target.getAttribute("name");
       const value = e.target.value;
 
-      const currentURL = new URL(window.location);
-      const checkIfExist = currentURL.searchParams.get(name);
+      const targetURL = new URL(url, window.location.origin);
+      const checkIfExist = targetURL.searchParams.get(name);
+
 
       if (checkIfExist === "") {
-        currentURL.searchParams.append(name, value);
+        // make sure if contains empty ?name=
+        targetURL.searchParams.delete(name);
+
+        targetURL.searchParams.append(name, value);
       } else {
-        currentURL.searchParams.set(name, value);
+        targetURL.searchParams.set(name, value);
       }
 
       // push to browser history
-      window.history.pushState({}, "", currentURL);
+      window.history.pushState({}, "", targetURL);
     }
   },
 });

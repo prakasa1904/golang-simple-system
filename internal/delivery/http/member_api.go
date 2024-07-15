@@ -65,7 +65,7 @@ func (c *MemberAPIController) Add(w http.ResponseWriter, r *http.Request) {
 
 	c.view.Set("users", users)
 
-	err = c.view.HTML(w).RenderClean("views/pages/home/list-members.html")
+	err = c.view.HTML(w).RenderClean("views/pages/find/list-members.html")
 	if err != nil {
 		c.log.Warnf("RenderClean error : %+v", err)
 	}
@@ -95,7 +95,7 @@ func (c *MemberAPIController) Find(w http.ResponseWriter, r *http.Request) {
 
 	c.view.Set("users", users)
 
-	err = c.view.HTML(w).RenderClean("views/pages/home/list-members.html")
+	err = c.view.HTML(w).RenderClean("views/pages/find/list-members.html")
 	if err != nil {
 		c.log.Warnf("RenderClean error : %+v", err)
 	}

@@ -1,8 +1,9 @@
 <form
   class="max-w-md mx-auto"
-  hx-target="#home-users"
-  hx-swap="outerHTML"
+  hx-target="#root"
+  hx-swap="innerHTML"
   hx-post="/api/member/add"
+  hx-push-url="/find"
   hx-ext="json-enc"
   hx-on::after-request="this.reset()"
   hx-vals="js:{current_url: window.location.href}"

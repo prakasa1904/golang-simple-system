@@ -21,12 +21,14 @@ type BootstrapConfig struct {
 
 func Bootstrap(config *BootstrapConfig) {
 	homeController := http.NewHomeController(config.DB, config.Log, config.View, config.Validate)
+	findController := http.NewFindController(config.DB, config.Log, config.View, config.Validate)
 	aboutController := http.NewAboutController(config.DB, config.Log, config.View, config.Validate)
 	serviceController := http.NewServiceController(config.DB, config.Log, config.View, config.Validate)
 	memberAPIController := http.NewMemberAPIController(config.DB, config.Log, config.View, config.Validate)
 
 	route := &http.RouteConfig{
 		Router:              config.Router,
+		FindController:      findController,
 		AboutController:     aboutController,
 		HomeController:      homeController,
 		ServiceController:   serviceController,
