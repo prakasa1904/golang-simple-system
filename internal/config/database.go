@@ -24,7 +24,7 @@ type DatabaseOption struct {
 	ConnMaxLifetime time.Duration
 }
 
-func New(cfg DatabaseOption) *gorm.DB {
+func NewDatabase(cfg DatabaseOption) *gorm.DB {
 
 	// set default configuration
 	if cfg.Host == "" {

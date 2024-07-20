@@ -24,6 +24,7 @@ func Bootstrap(config *BootstrapConfig) {
 	findController := http.NewFindController(config.DB, config.Log, config.View, config.Validate)
 	aboutController := http.NewAboutController(config.DB, config.Log, config.View, config.Validate)
 	serviceController := http.NewServiceController(config.DB, config.Log, config.View, config.Validate)
+	whatsappController := http.NewWhatsappController(config.Config, config.Log, config.View)
 	memberAPIController := http.NewMemberAPIController(config.DB, config.Log, config.View, config.Validate)
 
 	route := &http.RouteConfig{
@@ -32,6 +33,7 @@ func Bootstrap(config *BootstrapConfig) {
 		AboutController:     aboutController,
 		HomeController:      homeController,
 		ServiceController:   serviceController,
+		WhatsappController:  whatsappController,
 		MemberAPIController: memberAPIController,
 	}
 

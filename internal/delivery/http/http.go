@@ -9,11 +9,12 @@ import (
 
 // register your controller
 type RouteConfig struct {
-	Router            *chi.Mux
-	HomeController    *HomeController
-	FindController    *FindController
-	AboutController   *AboutController
-	ServiceController *ServiceController
+	Router             *chi.Mux
+	HomeController     *HomeController
+	FindController     *FindController
+	AboutController    *AboutController
+	ServiceController  *ServiceController
+	WhatsappController *WhatsappController
 
 	// register API by service
 	MemberAPIController *MemberAPIController
@@ -43,6 +44,7 @@ func (c *RouteConfig) SetupGuestRoute() {
 	c.Router.Get("/find", c.FindController.Home)
 	c.Router.Get("/service", c.ServiceController.Home)
 	c.Router.Get("/about", c.AboutController.Home)
+	c.Router.Get("/whatsapp", c.WhatsappController.Home)
 }
 
 func (c *RouteConfig) SetupComponentRoute() {
