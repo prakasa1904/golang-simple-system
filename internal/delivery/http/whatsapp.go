@@ -1,7 +1,6 @@
 package http
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/devetek/go-core/render"
@@ -43,10 +42,6 @@ func (c *WhatsappController) Home(w http.ResponseWriter, r *http.Request) {
 	c.myRepository.ListenQRCode()
 
 	qrCode := c.myRepository.GetQRCode()
-
-	log.Println("qrCodeqrCodeqrCodeqrCode")
-	log.Println(qrCode)
-	log.Println("qrCodeqrCodeqrCodeqrCode")
 
 	c.view.Set("qrcode", qrCode)
 
