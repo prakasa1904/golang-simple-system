@@ -13,7 +13,7 @@ func main() {
 	cfg := config.NewConfig()
 	log := config.NewLogger(cfg)
 	validate := config.NewValidator()
-	db := config.New(config.DatabaseOption{
+	db := config.NewDatabase(config.DatabaseOption{
 		Driver:   cfg.GetString("database.driver"),
 		DBName:   cfg.GetString("database.name"),
 		Username: cfg.GetString("database.username"),

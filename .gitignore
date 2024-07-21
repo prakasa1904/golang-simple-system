@@ -1,5 +1,5 @@
 tmp
-sql_db
+*_db
 
 # nodeJS modules
 node_modules

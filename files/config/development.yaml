@@ -5,6 +5,10 @@ database:
   name: sql_db
   username: username
   password: password
+whatsapp:
+  dbdriver: sqlite3
+  dbname: wa_db
+  debug_level: DEBUG
 view:
   default: "views/components/container/index.html"
 log:
