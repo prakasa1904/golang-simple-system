@@ -6,3 +6,5 @@ node_modules
 
 # app binary
 app-boilerplate
+
+vendor/

@@ -26,6 +26,7 @@ func Bootstrap(config *BootstrapConfig) {
 	serviceController := http.NewServiceController(config.DB, config.Log, config.View, config.Validate)
 	whatsappController := http.NewWhatsappController(config.Config, config.Log, config.View)
 	memberAPIController := http.NewMemberAPIController(config.DB, config.Log, config.View, config.Validate)
+	qrController := http.NewQRController(config.Config, config.Log)
 
 	route := &http.RouteConfig{
 		Router:              config.Router,
@@ -35,6 +36,7 @@ func Bootstrap(config *BootstrapConfig) {
 		ServiceController:   serviceController,
 		WhatsappController:  whatsappController,
 		MemberAPIController: memberAPIController,
+		QRController:        qrController,
 	}
 
 	// init registered router

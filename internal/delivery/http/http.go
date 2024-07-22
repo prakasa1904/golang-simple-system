@@ -15,6 +15,7 @@ type RouteConfig struct {
 	AboutController    *AboutController
 	ServiceController  *ServiceController
 	WhatsappController *WhatsappController
+	QRController       *QRController
 
 	// register API by service
 	MemberAPIController *MemberAPIController
@@ -62,6 +63,7 @@ func (c *RouteConfig) SetupComponentRoute() {
 		r.Route("/about", func(r chi.Router) {
 			r.Get("/", c.AboutController.Component)
 		})
+
 	})
 }
 
@@ -71,6 +73,9 @@ func (c *RouteConfig) SetupAPItRoute() {
 		r.Route("/member", func(r chi.Router) {
 			r.Post("/add", c.MemberAPIController.Add)
 			r.Post("/find", c.MemberAPIController.Find)
+		})
+		r.Route("/qr", func(r chi.Router) {
+			r.Post("/", c.QRController.View)
 		})
 	})
 }
