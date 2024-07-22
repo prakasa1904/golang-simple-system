@@ -17,7 +17,6 @@ type QRController struct {
 	log          *logrus.Logger
 	myRepository *qr.Repository
 	view         *render.Engine
-	// qrCode       *simpleQRCode
 }
 
 type simpleQRCode struct {
