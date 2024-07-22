@@ -1,4 +1,4 @@
-# include all prerequisites
+# include all prerequisites, test
 include scripts/make/*.Mak
 
 ################################################################################
