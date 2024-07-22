@@ -3,7 +3,7 @@
 ################################################################################
 
 init: .bin-validator ## Init development runtime
-	@touch sql_db
+	@touch panji_express.db
 	@sleep 5
 	@make migrate
 

@@ -8,7 +8,9 @@ require (
 	github.com/devetek/go-core v0.0.0-20231121030152-a45e6f9a6f7b
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-playground/validator/v10 v10.22.0
+	github.com/mdp/qrterminal/v3 v3.2.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
+	google.golang.org/protobuf v1.34.2
 )
 
 require (
@@ -22,7 +24,8 @@ require (
 	github.com/rs/zerolog v1.33.0 // indirect
 	go.mau.fi/libsignal v0.1.1 // indirect
 	go.mau.fi/util v0.6.0 // indirect
-	google.golang.org/protobuf v1.34.2 // indirect
+	golang.org/x/term v0.22.0 // indirect
+	rsc.io/qr v0.2.0 // indirect
 )
 
 require (
@@ -49,7 +52,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
-	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/microcosm-cc/bluemonday v1.0.22 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect

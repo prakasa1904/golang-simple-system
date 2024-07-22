@@ -1,5 +1,6 @@
 tmp
 *_db
+*.db
 
 # nodeJS modules
 node_modules

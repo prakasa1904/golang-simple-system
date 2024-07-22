@@ -26,12 +26,11 @@ htmx.defineExtension("push-url-with-query", {
 });
 
 // qr code
+let text = document.getElementById("qrsrt").textContent;
 var qrcode = new QRCode(document.getElementById("qrcode"), {
-  text: "2@VlomCzv/gCK36hNHq0cqEG2UAmTI8Az55EzP6pLlcVwtLefGHrAqjnJSURYzBvKv/GXlZXgk1swP4g==,C3iPkKk599olKykuR8zNhj0cbp2VwxVzc3tuNLupwCI=,KN0FHG9BIIEGAwwsooCHgJJrMy1mXRIn+o2F3gG5bFk=,dAC7C5RdO9p35CtL/fhTcNykdj3wz+4SFvK4If1hH40=",
-  width: 300,
-  height: 300,
-  colorDark : "#000000",
-  colorLight : "#ffffff",
-  correctLevel : QRCode.CorrectLevel.M
+  text: text,
+  width: 400,
+  height: 400,
+  correctLevel : QRCode.CorrectLevel.L
 });
 
