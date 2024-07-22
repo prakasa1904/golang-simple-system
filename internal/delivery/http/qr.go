@@ -17,7 +17,7 @@ type QRController struct {
 	log          *logrus.Logger
 	myRepository *qr.Repository
 	view         *render.Engine
-	qrCode       *simpleQRCode
+	// qrCode       *simpleQRCode
 }
 
 type simpleQRCode struct {
@@ -39,8 +39,8 @@ func NewQRController(
 	}
 }
 
-func (c *QRController) Generate() ([]byte, error) {
-	qrCode, err := qrcode.Encode(c.qrCode.Content, c.qrCode.RecoveryLevel, c.qrCode.Size)
+func (c *QRController) Generate(qrCodeVal simpleQRCode) ([]byte, error) {
+	qrCode, err := qrcode.Encode(qrCodeVal.Content, qrCodeVal.RecoveryLevel, qrCodeVal.Size)
 	if err != nil {
 		return nil, fmt.Errorf("could not generate a QR code: %v", err)
 	}
@@ -69,11 +69,8 @@ func (c *QRController) View(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// qrCode := simpleQRCode{Content: content, Size: qrCodeSize}
-	c.qrCode.Content = content
-	c.qrCode.Size = qrCodeSize
-
-	codeData, err = c.Generate()
+	qrCodeVal := simpleQRCode{Content: content, RecoveryLevel: 1, Size: qrCodeSize}
+	codeData, err = c.Generate(qrCodeVal)
 	if err != nil {
 		w.WriteHeader(400)
 		json.NewEncoder(w).Encode(

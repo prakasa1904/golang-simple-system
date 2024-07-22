@@ -46,7 +46,6 @@ func (c *RouteConfig) SetupGuestRoute() {
 	c.Router.Get("/service", c.ServiceController.Home)
 	c.Router.Get("/about", c.AboutController.Home)
 	c.Router.Get("/whatsapp", c.WhatsappController.Home)
-	// c.Router.Get("/qr", c.QRController.Home)
 }
 
 func (c *RouteConfig) SetupComponentRoute() {
@@ -64,6 +63,7 @@ func (c *RouteConfig) SetupComponentRoute() {
 		r.Route("/about", func(r chi.Router) {
 			r.Get("/", c.AboutController.Component)
 		})
+
 	})
 }
 
@@ -75,7 +75,7 @@ func (c *RouteConfig) SetupAPItRoute() {
 			r.Post("/find", c.MemberAPIController.Find)
 		})
 		r.Route("/qr", func(r chi.Router) {
-			r.Post("/view", c.QRController.View)
+			r.Post("/", c.QRController.View)
 		})
 	})
 }
