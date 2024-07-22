@@ -6,7 +6,7 @@ database:
   username: username
   password: password
 whatsapp:
-  dbdriver: sqlite3
+  dbdriver: sqlite
   dbname: wa_db
   debug_level: DEBUG
 view:

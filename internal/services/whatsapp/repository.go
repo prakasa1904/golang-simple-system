@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/glebarez/sqlite"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"go.mau.fi/whatsmeow"
@@ -28,7 +28,7 @@ func NewRepository(config *viper.Viper, log *logrus.Logger) *Repository {
 	// Make sure you add appropriate DB connector imports, e.g. github.com/mattn/go-sqlite3 for SQLite
 	container, err := sqlstore.New(
 		config.GetString("whatsapp.dbdriver"),
-		"file:"+config.GetString("whatsapp.dbname")+"?_foreign_keys=on",
+		"file:"+config.GetString("whatsapp.dbname")+"?_pragma=foreign_keys(1)",
 		dbLog,
 	)
 
