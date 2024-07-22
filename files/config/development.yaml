@@ -2,12 +2,12 @@ application:
   port: 3000
 database:
   driver: sqllite
-  name: sql_db
+  name: panji_express.db
   username: username
   password: password
 whatsapp:
   dbdriver: sqlite
-  dbname: wa_db
+  dbname: panji_wa.db
   debug_level: DEBUG
 view:
   default: "views/components/container/index.html"
