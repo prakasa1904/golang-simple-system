@@ -32,25 +32,16 @@ export ENV=development && go run cmd/webapp/*.go
 
 2. Open [http://localhost:3000](http://localhost:3000/)
 
+
+## Diagram
+
+![Squence Diagram](https://www.mermaidchart.com/raw/233f7025-f9b2-4cb7-8f06-c5d4da904a2d?theme=light&version=v0.1&format=svg)
+
+
 ## Todo
 - [ ] Integrate with tailwind CLI
 - [ ] Deploy to [dPanel](https://cloud.terpusat.com/)
 
-## Diagram
-
-```mermaid
-sequenceDiagram
-actor Customer
-Customer ->> Order: Create order
-Order ->> Channel: Submit notification to whatsApp / Telegram
-Channel ->> User: Get user type Courier by Regional and Availability
-loop User
-        Channel--xUser: When no user available
-        Channel--x Channel: When send to channel error
-    end
-actor Courier
-Channel ->> Courier: Send notification to Courier
-``` 
 
 ## Reference
 
