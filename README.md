@@ -36,6 +36,21 @@ export ENV=development && go run cmd/webapp/*.go
 - [ ] Integrate with tailwind CLI
 - [ ] Deploy to [dPanel](https://cloud.terpusat.com/)
 
+## Diagram
+
+```mermaid
+sequenceDiagram
+actor Customer
+Customer ->> Order: Create order
+Order ->> Channel: Submit notification to whatsApp / Telegram
+Channel ->> User: Get user type Courier by Regional and Availability
+loop User
+        Channel--xUser: When no user available
+        Channel--x Channel: When send to channel error
+    end
+actor Courier
+Channel ->> Courier: Send notification to Courier
+``` 
 
 ## Reference
 
