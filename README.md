@@ -32,6 +32,12 @@ export ENV=development && go run cmd/webapp/*.go
 
 2. Open [http://localhost:3000](http://localhost:3000/)
 
+
+## Diagram
+
+![Squence Diagram](https://www.mermaidchart.com/raw/233f7025-f9b2-4cb7-8f06-c5d4da904a2d?theme=light&version=v0.1&format=svg)
+
+
 ## Todo
 - [ ] Integrate with tailwind CLI
 - [ ] Deploy to [dPanel](https://cloud.terpusat.com/)
