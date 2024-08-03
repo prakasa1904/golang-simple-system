@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/devetek/golang-webapp-boilerplate/internal/services/order"
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -51,6 +52,7 @@ func (c *UseCase) Create(ctx context.Context, request *CreateRequest) (*Response
 	order := &Entity{
 		Description: request.Description,
 		MetaFile:    request.MetaFile,
+		Status:      order.StatusCreated,
 	}
 
 	if err := c.Repository.Create(tx, order); err != nil {
