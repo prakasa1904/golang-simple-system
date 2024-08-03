@@ -10,8 +10,9 @@ type Entity struct {
 	Password  string    `gorm:"column:password;size:256"`
 	CreatedAt time.Time `gorm:"column:created_at;not null;default:current_timestamp"`
 	UpdatedAt time.Time `gorm:"column:updated_at;not null;default:current_timestamp;autoUpdateTime"`
+	GroupID   uint64    `gorm:"column:id;primaryKey;autoIncrement:true"`
 }
 
 func (a *Entity) TableName() string {
-	return "user"
+	return "member"
 }

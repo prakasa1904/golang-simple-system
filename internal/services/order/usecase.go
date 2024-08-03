@@ -1,4 +1,4 @@
-package member
+package order
 
 import (
 	"context"
@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -27,7 +26,7 @@ func NewUseCase(db *gorm.DB, logger *logrus.Logger, validate *validator.Validate
 	}
 }
 
-func (c *UseCase) Create(ctx context.Context, request *RegisterRequest) (*Response, error) {
+func (c *UseCase) Create(ctx context.Context, request *CreateRequest) (*Response, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -37,33 +36,25 @@ func (c *UseCase) Create(ctx context.Context, request *RegisterRequest) (*Respon
 		return nil, err
 	}
 
-	total, err := c.Repository.CountByUsername(tx, request.Username)
+	total, err := c.Repository.CountByDescription(tx, request.Description)
 	if err != nil {
-		c.Log.Warnf("Failed count member from database : %+v", err)
+		c.Log.Warnf("Failed count order from database : %+v", err)
 		return nil, err
 	}
 
 	if total > 0 {
-		c.Log.Warnf("Member already exists : %+v", err)
-		return nil, errors.New("member already exists")
+		c.Log.Warnf("Order already exists : %+v", err)
+		return nil, errors.New("order already exists")
 	}
 
-	password, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
-	if err != nil {
-		c.Log.Warnf("Failed to generate bcrype hash : %+v", err)
-		return nil, err
+	// new order
+	order := &Entity{
+		Description: request.Description,
+		MetaFile:    request.MetaFile,
 	}
 
-	// new user
-	user := &Entity{
-		Fullname: request.Fullname,
-		Password: string(password),
-		Username: request.Username,
-		Email:    request.Email,
-	}
-
-	if err := c.Repository.Create(tx, user); err != nil {
-		c.Log.Warnf("Failed create member to database : %+v", err)
+	if err := c.Repository.Create(tx, order); err != nil {
+		c.Log.Warnf("Failed create order to database : %+v", err)
 		return nil, err
 	}
 
@@ -72,17 +63,17 @@ func (c *UseCase) Create(ctx context.Context, request *RegisterRequest) (*Respon
 		return nil, err
 	}
 
-	return UserToResponse(user), nil
+	return OrderToResponse(order), nil
 }
 
 func (c *UseCase) Find(ctx context.Context, filters map[string]string, limit int, order clause.OrderByColumn) (*[]Response, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
-	users := new([]Entity)
-	err := c.Repository.Find(tx, users, filters, limit, order)
+	orders := new([]Entity)
+	err := c.Repository.Find(tx, orders, filters, limit, order)
 	if err != nil {
-		c.Log.Warnf("Failed count member from database : %+v", err)
+		c.Log.Warnf("Failed count order from database : %+v", err)
 		return nil, err
 	}
 
@@ -92,11 +83,11 @@ func (c *UseCase) Find(ctx context.Context, filters map[string]string, limit int
 	}
 
 	// map to response
-	var usersResp = new([]Response)
-	for _, user := range *users {
-		userItem := UserToResponse(&user)
-		*usersResp = append(*usersResp, *userItem)
+	var ordersResp = new([]Response)
+	for _, order := range *orders {
+		orderItem := OrderToResponse(&order)
+		*ordersResp = append(*ordersResp, *orderItem)
 	}
 
-	return usersResp, nil
+	return ordersResp, nil
 }

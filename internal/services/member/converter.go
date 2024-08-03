@@ -1,11 +1,11 @@
 package member
 
-func UserToResponse(user *Entity) *Response {
+func UserToResponse(member *Entity) *Response {
 	return &Response{
-		ID:        user.ID,
-		Fullname:  user.Fullname,
-		Username:  user.Username,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+		ID:        member.ID,
+		Fullname:  member.Fullname,
+		Username:  member.Username,
+		CreatedAt: member.CreatedAt,
+		UpdatedAt: member.UpdatedAt,
 	}
 }
