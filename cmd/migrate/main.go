@@ -4,7 +4,9 @@ import (
 	"os"
 
 	"github.com/devetek/golang-webapp-boilerplate/internal/config"
+	"github.com/devetek/golang-webapp-boilerplate/internal/services/group"
 	"github.com/devetek/golang-webapp-boilerplate/internal/services/member"
+	"github.com/devetek/golang-webapp-boilerplate/internal/services/order"
 )
 
 func main() {
@@ -21,16 +23,18 @@ func main() {
 	env := os.Getenv("ENV")
 
 	// Define models
-	var user = &member.Entity{}
+	var groupModel = &group.Entity{}
+	var memberModel = &member.Entity{}
+	var orderModel = &order.Entity{}
 
-	if err := db.Migrator().AutoMigrate(user); err != nil {
+	if err := db.Migrator().AutoMigrate(groupModel, memberModel, orderModel); err != nil {
 		log.Errorf("Migration error : %+v", err)
 	}
 
 	// Seeder for development
 	if env == "development" {
 		var email string = "admin@devetek.com"
-		result := db.First(user, "email = ?", email)
+		result := db.First(orderModel, "email = ?", email)
 		if result.Error != nil {
 			log.Errorf("Create seed development error : %+v", result.Error)
 		}
@@ -40,12 +44,12 @@ func main() {
 		}
 
 		if result.RowsAffected < 1 {
-			var newUser = member.Entity{
+			var newMember = member.Entity{
 				Username: "administrator",
 				Email:    email,
 			}
 
-			result := db.Create(&newUser)
+			result := db.Create(&newMember)
 			if result.Error != nil {
 				log.Errorf("Create database error : %+v", result.Error)
 				panic(result.Error)

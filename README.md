@@ -39,7 +39,7 @@ export ENV=development && go run cmd/webapp/*.go
 
 
 ## Todo
-- [ ] Integrate with tailwind CLI
+- [x] Integrate with tailwind CLI
 - [ ] Deploy to [dPanel](https://cloud.terpusat.com/)
 
 

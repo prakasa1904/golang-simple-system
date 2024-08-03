@@ -1,4 +1,4 @@
-package member
+package group
 
 import (
 	"github.com/sirupsen/logrus"
@@ -39,17 +39,17 @@ func (r *Repository) FindById(db *gorm.DB, entity *Entity, id any) error {
 	return db.Where("id = ?", id).Take(entity).Error
 }
 
-func (r *Repository) CountByUsername(db *gorm.DB, username any) (int64, error) {
+func (r *Repository) CountByName(db *gorm.DB, name any) (int64, error) {
 	var total int64
-	err := db.Model(new(Entity)).Where("username = ?", username).Count(&total).Error
+	err := db.Model(new(Entity)).Where("name = ?", name).Count(&total).Error
 	return total, err
 }
 
-func (r *Repository) FindByUsername(db *gorm.DB, member *Entity, username string) error {
-	return db.Where("username = ?", username).First(member).Error
+func (r *Repository) FindByName(db *gorm.DB, group *Entity, name string) error {
+	return db.Where("name = ?", name).First(group).Error
 }
 
-func (r *Repository) Find(db *gorm.DB, members *[]Entity, filters map[string]string, limit int, order clause.OrderByColumn) error {
+func (r *Repository) Find(db *gorm.DB, groups *[]Entity, filters map[string]string, limit int, order clause.OrderByColumn) error {
 	// build query find with dynamic data filter
 	buildQuery := db.Select(SelectColumn)
 
@@ -57,7 +57,7 @@ func (r *Repository) Find(db *gorm.DB, members *[]Entity, filters map[string]str
 		buildQuery = buildQuery.Where(key, value)
 	}
 
-	buildQuery = buildQuery.Limit(limit).Order(order).Find(members)
+	buildQuery = buildQuery.Limit(limit).Order(order).Find(groups)
 
 	return buildQuery.Error
 }
