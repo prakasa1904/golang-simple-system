@@ -1,0 +1,63 @@
+package http
+
+/**
+Reference: https://github.com/themesberg/flowbite-admin-dashboard
+*/
+
+import (
+	"log"
+	"net/http"
+
+	"github.com/devetek/go-core/render"
+	"github.com/go-playground/validator/v10"
+	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
+)
+
+type AdminDashboardController struct {
+	log *logrus.Logger
+	// myUsecase *member.UseCase
+	view   *render.Engine
+	layout string
+}
+
+func NewAdminDashboardController(
+	db *gorm.DB,
+	log *logrus.Logger,
+	view *render.Engine,
+	validate *validator.Validate,
+	layout string,
+) *AdminDashboardController {
+	// init module repositories
+	// myRepository := member.NewRepository(log)
+
+	// init module usecase
+	// myUsecase := member.NewUseCase(db, log, validate, myRepository)
+
+	return &AdminDashboardController{
+		log: log,
+		// myUsecase: myUsecase,
+		view:   view,
+		layout: layout,
+	}
+}
+
+func (c *AdminDashboardController) setHeaderMeta() {
+	c.view.Set("title", "Administrator")
+	c.view.Set("description", "Dashboard administrator")
+}
+
+func (c *AdminDashboardController) Home(w http.ResponseWriter, r *http.Request) {
+	c.setHeaderMeta()
+
+	log.Println("c.layoutc.layoutc.layout")
+	log.Println(c.layout)
+	log.Println("c.layoutc.layoutc.layout")
+
+	// render page with template html (ejs)
+	err := c.view.HTML(w).RenderWithLayout("views/pages/admin/dashboard/index.html", c.layout)
+	if err != nil {
+		c.log.Warnf("Render error : %+v", err)
+	}
+
+}

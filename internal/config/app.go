@@ -28,15 +28,25 @@ func Bootstrap(config *BootstrapConfig) {
 	memberAPIController := http.NewMemberAPIController(config.DB, config.Log, config.View, config.Validate)
 	qrController := http.NewQRController(config.Config, config.Log)
 
+	// administrator controller
+	adminDashboardController := http.NewAdminDashboardController(
+		config.DB,
+		config.Log,
+		config.View,
+		config.Validate,
+		config.Config.GetString("view.administrator"),
+	)
+
 	route := &http.RouteConfig{
-		Router:              config.Router,
-		FindController:      findController,
-		AboutController:     aboutController,
-		HomeController:      homeController,
-		ServiceController:   serviceController,
-		WhatsappController:  whatsappController,
-		MemberAPIController: memberAPIController,
-		QRController:        qrController,
+		Router:                   config.Router,
+		FindController:           findController,
+		AboutController:          aboutController,
+		HomeController:           homeController,
+		ServiceController:        serviceController,
+		WhatsappController:       whatsappController,
+		MemberAPIController:      memberAPIController,
+		QRController:             qrController,
+		AdminDashboardController: adminDashboardController,
 	}
 
 	// init registered router

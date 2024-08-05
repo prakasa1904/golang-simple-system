@@ -9,13 +9,14 @@ import (
 
 // register your controller
 type RouteConfig struct {
-	Router             *chi.Mux
-	HomeController     *HomeController
-	FindController     *FindController
-	AboutController    *AboutController
-	ServiceController  *ServiceController
-	WhatsappController *WhatsappController
-	QRController       *QRController
+	Router                   *chi.Mux
+	HomeController           *HomeController
+	FindController           *FindController
+	AboutController          *AboutController
+	ServiceController        *ServiceController
+	WhatsappController       *WhatsappController
+	QRController             *QRController
+	AdminDashboardController *AdminDashboardController
 
 	// register API by service
 	MemberAPIController *MemberAPIController
@@ -27,6 +28,7 @@ func (c *RouteConfig) Setup() {
 	c.SetupGuestRoute()
 	c.SetupComponentRoute()
 	c.SetupAPItRoute()
+	c.SetupAdminRoute()
 }
 
 // setup global middleware
@@ -46,6 +48,16 @@ func (c *RouteConfig) SetupGuestRoute() {
 	c.Router.Get("/service", c.ServiceController.Home)
 	c.Router.Get("/about", c.AboutController.Home)
 	c.Router.Get("/whatsapp", c.WhatsappController.Home)
+}
+
+func (c *RouteConfig) SetupAdminRoute() {
+	// TODO: add admin middleware later
+
+	c.Router.Route("/admin", func(r chi.Router) {
+		r.Route("/", func(r chi.Router) {
+			r.Get("/", c.AdminDashboardController.Home)
+		})
+	})
 }
 
 func (c *RouteConfig) SetupComponentRoute() {
