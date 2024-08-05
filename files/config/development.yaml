@@ -11,5 +11,6 @@ whatsapp:
   debug_level: DEBUG
 view:
   default: "views/components/container/index.html"
+  administrator: "views/components/container/admin/admin.html"
 log:
   level: 6
