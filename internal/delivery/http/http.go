@@ -9,14 +9,17 @@ import (
 
 // register your controller
 type RouteConfig struct {
-	Router                   *chi.Mux
-	HomeController           *HomeController
-	FindController           *FindController
-	AboutController          *AboutController
-	ServiceController        *ServiceController
-	WhatsappController       *WhatsappController
-	QRController             *QRController
+	Router             *chi.Mux
+	HomeController     *HomeController
+	FindController     *FindController
+	AboutController    *AboutController
+	ServiceController  *ServiceController
+	WhatsappController *WhatsappController
+	QRController       *QRController
+
+	// admin controller
 	AdminDashboardController *AdminDashboardController
+	AdminMemberController    *AdminMemberController
 
 	// register API by service
 	MemberAPIController *MemberAPIController
@@ -56,6 +59,9 @@ func (c *RouteConfig) SetupAdminRoute() {
 	c.Router.Route("/admin", func(r chi.Router) {
 		r.Route("/", func(r chi.Router) {
 			r.Get("/", c.AdminDashboardController.Home)
+		})
+		r.Route("/member", func(r chi.Router) {
+			r.Get("/", c.AdminMemberController.Home)
 		})
 	})
 }

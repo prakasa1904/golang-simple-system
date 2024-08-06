@@ -36,6 +36,13 @@ func Bootstrap(config *BootstrapConfig) {
 		config.Validate,
 		config.Config.GetString("view.administrator"),
 	)
+	adminMemberController := http.NewAdminMemberController(
+		config.DB,
+		config.Log,
+		config.View,
+		config.Validate,
+		config.Config.GetString("view.administrator"),
+	)
 
 	route := &http.RouteConfig{
 		Router:                   config.Router,
@@ -47,6 +54,7 @@ func Bootstrap(config *BootstrapConfig) {
 		MemberAPIController:      memberAPIController,
 		QRController:             qrController,
 		AdminDashboardController: adminDashboardController,
+		AdminMemberController:    adminMemberController,
 	}
 
 	// init registered router
