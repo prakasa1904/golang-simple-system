@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.21.4
 
 require (
-	github.com/devetek/go-core v0.0.1
+	github.com/devetek/go-core v0.0.2-next
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/mdp/qrterminal/v3 v3.2.0
