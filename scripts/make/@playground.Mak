@@ -25,5 +25,8 @@ clean-up: .bin-validator ## Cleanup database, create new with make init
 	@rm panji_wa.db
 
 # hidden comment test go-core
-local-core:
+replace-local-core:
 	@go mod edit -replace github.com/devetek/go-core=/Users/prakasa/Projects/go-core
+
+dropreplace-local-core:
+	@go mod edit -dropreplace github.com/devetek/go-core

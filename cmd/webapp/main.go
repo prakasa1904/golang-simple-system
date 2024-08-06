@@ -31,9 +31,9 @@ func main() {
 			Enable: true,
 			HTML: render.MinifierHTMLConfig{
 				KeepWhitespace:      false,
-				KeepDefaultAttrVals: true,
-				KeepDocumentTags:    true,
-				KeepEndTags:         true,
+				KeepDefaultAttrVals: false,
+				KeepDocumentTags:    false,
+				KeepEndTags:         false,
 				KeepQuotes:          false,
 			},
 		}),
