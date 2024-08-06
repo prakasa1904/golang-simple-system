@@ -27,6 +27,16 @@ func main() {
 				"keywords": "golang, HTMX, Web Platform, SPA, Tailwind",
 			}),
 		render.WithDefaultLayout(cfg.GetString("view.default")),
+		render.WithMinifier(render.MinifierOption{
+			Enable: true,
+			HTML: render.MinifierHTMLConfig{
+				KeepWhitespace:      false,
+				KeepDefaultAttrVals: true,
+				KeepDocumentTags:    true,
+				KeepEndTags:         true,
+				KeepQuotes:          false,
+			},
+		}),
 	)
 
 	config.Bootstrap(&config.BootstrapConfig{

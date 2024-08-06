@@ -23,3 +23,7 @@ migrate: .bin-validator ## Migrate database "make migrate env=beta"
 clean-up: .bin-validator ## Cleanup database, create new with make init
 	@rm panji_express.db
 	@rm panji_wa.db
+
+# hidden comment test go-core
+local-core:
+	@go mod edit -replace github.com/devetek/go-core=/Users/prakasa/Projects/go-core

@@ -5,7 +5,6 @@ Reference: https://github.com/themesberg/flowbite-admin-dashboard
 */
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/devetek/go-core/render"
@@ -43,19 +42,15 @@ func NewAdminDashboardController(
 }
 
 func (c *AdminDashboardController) setHeaderMeta() {
-	c.view.Set("title", "Administrator")
+	c.view.Set("title", "Dashboard - Admin")
 	c.view.Set("description", "Dashboard administrator")
 }
 
 func (c *AdminDashboardController) Home(w http.ResponseWriter, r *http.Request) {
 	c.setHeaderMeta()
 
-	log.Println("c.layoutc.layoutc.layout")
-	log.Println(c.layout)
-	log.Println("c.layoutc.layoutc.layout")
-
 	// render page with template html (ejs)
-	err := c.view.HTML(w).RenderWithLayout("views/pages/admin/dashboard/index.html", c.layout)
+	err := c.view.HTML(w).RenderWithLayout("views/pages/admin/dashboard/admin-dashboard.html", c.layout)
 	if err != nil {
 		c.log.Warnf("Render error : %+v", err)
 	}
