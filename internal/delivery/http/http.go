@@ -3,6 +3,8 @@ package http
 import (
 	"net/http"
 
+	"github.com/devetek/go-core/render"
+	"github.com/devetek/golang-webapp-boilerplate/internal/delivery/http/middlewares"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -25,13 +27,13 @@ type RouteConfig struct {
 	MemberAPIController *MemberAPIController
 }
 
-func (c *RouteConfig) Setup() {
+func (c *RouteConfig) Setup(view *render.Engine) {
 	c.SetupMiddleware()
 	c.SetupStaticFileServing()
 	c.SetupGuestRoute()
 	c.SetupComponentRoute()
 	c.SetupAPItRoute()
-	c.SetupAdminRoute()
+	c.SetupAdminRoute(view)
 }
 
 // setup global middleware
@@ -53,10 +55,11 @@ func (c *RouteConfig) SetupGuestRoute() {
 	c.Router.Get("/whatsapp", c.WhatsappController.Home)
 }
 
-func (c *RouteConfig) SetupAdminRoute() {
+func (c *RouteConfig) SetupAdminRoute(view *render.Engine) {
 	// TODO: add admin middleware later
 
 	c.Router.Route("/admin", func(r chi.Router) {
+		r.Use(middlewares.AdminSidebar(view))
 		r.Route("/", func(r chi.Router) {
 			r.Get("/", c.AdminDashboardController.Home)
 		})

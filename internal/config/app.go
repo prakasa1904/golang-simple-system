@@ -58,5 +58,6 @@ func Bootstrap(config *BootstrapConfig) {
 	}
 
 	// init registered router
-	route.Setup()
+	// add additional config here if you need to use it on the middleware
+	route.Setup(config.View)
 }
