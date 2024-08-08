@@ -63,7 +63,7 @@ func (c *UseCase) Create(ctx context.Context, request *RequestPayload) (*Respons
 		return nil, err
 	}
 
-	return GroupToResponse(group), nil
+	return EntityToResponse(group), nil
 }
 
 func (c *UseCase) Find(ctx context.Context, filters map[string]string, limit int, order clause.OrderByColumn) (*[]Response, error) {
@@ -85,7 +85,7 @@ func (c *UseCase) Find(ctx context.Context, filters map[string]string, limit int
 	// map to response
 	var response = new([]Response)
 	for _, group := range *groups {
-		groupItem := GroupToResponse(&group)
+		groupItem := EntityToResponse(&group)
 		*response = append(*response, *groupItem)
 	}
 
@@ -108,7 +108,7 @@ func (c *UseCase) GetById(ctx context.Context, id string) (*Response, error) {
 		return nil, err
 	}
 
-	return GroupToResponse(group), nil
+	return EntityToResponse(group), nil
 }
 
 func (c *UseCase) Update(ctx context.Context, request *RequestPayload) (*Response, error) {
@@ -137,7 +137,7 @@ func (c *UseCase) Update(ctx context.Context, request *RequestPayload) (*Respons
 		return nil, err
 	}
 
-	return GroupToResponse(group), nil
+	return EntityToResponse(group), nil
 }
 
 func (c *UseCase) Delete(ctx context.Context, request *RequestPayload) (*Response, error) {
@@ -166,5 +166,5 @@ func (c *UseCase) Delete(ctx context.Context, request *RequestPayload) (*Respons
 		return nil, err
 	}
 
-	return GroupToResponse(group), nil
+	return EntityToResponse(group), nil
 }

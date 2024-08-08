@@ -90,23 +90,30 @@ htmx.defineExtension("debug", {
   },
 });
 
-// flowbite init
-htmx.defineExtension("flowbite-drawer", {
+// flowbite init every visit another page
+htmx.defineExtension("flowbite", {
   onEvent: function (name, e) {
     console.log("name: ", name);
 
-    // if (name === "htmx:load") {
-    //   initFlowbite();
-    // }
+    if (name === "htmx:xhr:loadend") {
+      console.log("re-install Flowbite every page");
+      initFlowbite();
+    }
+  },
+});
 
+// flowbite drawer controller after fetch
+htmx.defineExtension("flowbite-drawer", {
+  onEvent: function (name, e) {
     if (name === "htmx:trigger") {
       const drawer = e.target.getAttribute("hx-flowbite-drawer");
-      const action = e.target.getAttribute("hx-flowbite-drawer-action") || "show";
-      
+      const action =
+        e.target.getAttribute("hx-flowbite-drawer-action") || "show";
+
       if (action === "show") {
         FlowbiteInstances._instances.Drawer[drawer].show();
       }
-      
+
       if (action !== "show") {
         FlowbiteInstances._instances.Drawer[drawer].hide();
       }
@@ -115,9 +122,9 @@ htmx.defineExtension("flowbite-drawer", {
 });
 
 // qr code
-const qrTarget = document.getElementById("qrsrt");
+let qrTarget = document.getElementById("qrsrt");
 if (qrTarget) {
-  const qrContent = qrTarget.textContent;
+  let qrContent = qrTarget.textContent;
   var qrcode = new QRCode(document.getElementById("qrcode"), {
     text: qrContent,
     width: 400,

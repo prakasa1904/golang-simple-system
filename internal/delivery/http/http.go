@@ -82,6 +82,19 @@ func (c *RouteConfig) SetupAdminRoute(view *render.Engine) {
 		})
 		r.Route("/member", func(r chi.Router) {
 			r.Get("/", c.AdminMemberController.Home)
+			// partial component UI
+			r.Route("/component", func(r chi.Router) {
+				r.Get("/list", c.AdminMemberController.ComponentList)
+				r.Get("/form/{action}", c.AdminMemberController.ComponentForm)
+				r.Get("/form/{action}/{id}", c.AdminMemberController.ComponentForm)
+				r.Get("/delete/{id}", c.AdminMemberController.ComponentDelete)
+			})
+			// mutation data and return status UI notification depend
+			r.Route("/mutation", func(r chi.Router) {
+				r.Post("/create", c.AdminMemberController.MutationCreate)
+				r.Post("/update", c.AdminMemberController.MutationUpdate)
+				r.Delete("/delete/{id}", c.AdminMemberController.MutationDelete)
+			})
 		})
 		r.Route("/group", func(r chi.Router) {
 			r.Get("/", c.AdminGroupController.Home)

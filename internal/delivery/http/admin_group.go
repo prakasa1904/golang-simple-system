@@ -47,7 +47,7 @@ func NewAdminGroupController(
 func (c *AdminGroupController) Home(w http.ResponseWriter, r *http.Request) {
 	filter := helper.ConvertQueryToFilter(r.URL, group.AllowedFilterQuery)
 	limit := helper.ConvertQueryToLimit(r.URL)
-	order := helper.ConvertQueryToOrder(r.URL)
+	order := helper.ConvertQueryToOrder(r.URL, "")
 
 	searchQuery := r.URL.Query().Get("name")
 
@@ -56,20 +56,28 @@ func (c *AdminGroupController) Home(w http.ResponseWriter, r *http.Request) {
 		c.log.Warnf("Find groups error : %+v", err)
 	}
 
+	c.view.Set("pageTitle", "Semua Group")
 	c.view.Set("search", searchQuery)
 	c.view.Set("groups", groups)
 
 	// render page with template html (ejs)
-	err = c.view.HTML(w).RenderWithLayout("views/pages/admin/group/admin-group.html", c.layout)
-	if err != nil {
-		c.log.Warnf("Render error : %+v", err)
+	if helper.IsHTMXRequest(r.Header) {
+		err = c.view.HTML(w).RenderClean("views/pages/admin/group/admin-group.html")
+		if err != nil {
+			c.log.Warnf("Render error : %+v", err)
+		}
+	} else {
+		err = c.view.HTML(w).RenderWithLayout("views/pages/admin/group/admin-group.html", c.layout)
+		if err != nil {
+			c.log.Warnf("Render error : %+v", err)
+		}
 	}
 }
 
 func (c *AdminGroupController) ComponentList(w http.ResponseWriter, r *http.Request) {
 	filter := helper.ConvertQueryToFilter(r.URL, group.AllowedFilterQuery)
 	limit := helper.ConvertQueryToLimit(r.URL)
-	order := helper.ConvertQueryToOrder(r.URL)
+	order := helper.ConvertQueryToOrder(r.URL, "")
 
 	groups, err := c.myUsecase.Find(r.Context(), filter, limit, order)
 	if err != nil {

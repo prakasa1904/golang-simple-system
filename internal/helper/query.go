@@ -43,9 +43,14 @@ func ConvertQueryToFilter(url *url.URL, allowFilterQuery []string) map[string]st
 	return filter
 }
 
-func ConvertQueryToOrder(url *url.URL) clause.OrderByColumn {
+func ConvertQueryToOrder(url *url.URL, orderDefault string) clause.OrderByColumn {
 	var isDescOrder = true
 	var orderBy = "id"
+
+	// helper to fixing join query
+	if orderDefault != "" {
+		orderBy = orderDefault
+	}
 
 	order := strings.ToLower(url.Query().Get("order"))
 	by := strings.ToLower(url.Query().Get("by"))

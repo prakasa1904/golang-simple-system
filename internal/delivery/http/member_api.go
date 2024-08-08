@@ -39,7 +39,7 @@ func NewMemberAPIController(
 }
 
 func (c *MemberAPIController) Add(w http.ResponseWriter, r *http.Request) {
-	var payloadRegister = new(member.RegisterRequest)
+	var payloadRegister = new(member.RequestPayload)
 	err := json.NewDecoder(r.Body).Decode(&payloadRegister)
 	if err != nil {
 		c.log.Warnf("Json decoder error : %+v", err)
@@ -57,7 +57,7 @@ func (c *MemberAPIController) Add(w http.ResponseWriter, r *http.Request) {
 
 	filter := helper.ConvertQueryToFilter(currentURL, member.AllowedFilterQuery)
 	limit := helper.ConvertQueryToLimit(currentURL)
-	order := helper.ConvertQueryToOrder(currentURL)
+	order := helper.ConvertQueryToOrder(currentURL, "")
 
 	users, err := c.myUsecase.Find(r.Context(), filter, limit, order)
 	if err != nil {
@@ -87,7 +87,7 @@ func (c *MemberAPIController) Find(w http.ResponseWriter, r *http.Request) {
 
 	filter := helper.ConvertQueryToFilter(currentURL, member.AllowedFilterQuery)
 	limit := helper.ConvertQueryToLimit(currentURL)
-	order := helper.ConvertQueryToOrder(currentURL)
+	order := helper.ConvertQueryToOrder(currentURL, "")
 
 	users, err := c.myUsecase.Find(r.Context(), filter, limit, order)
 	if err != nil {

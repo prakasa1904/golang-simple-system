@@ -7,7 +7,7 @@ import (
 )
 
 type Response struct {
-	ID        uint64    `json:"id,omitempty"`
+	ID        int64     `json:"id,omitempty"`
 	Name      string    `json:"name,omitempty"`
 	Status    int       `json:"status,omitempty"`
 	CreatedAt time.Time `json:"created_at,omitempty"`
