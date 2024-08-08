@@ -9,11 +9,19 @@ import (
 type Response struct {
 	ID        uint64    `json:"id,omitempty"`
 	Name      string    `json:"name,omitempty"`
+	Status    int       `json:"status,omitempty"`
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }
 
-type CreateRequest struct {
+type RequestPayload struct {
 	model.Request
-	Name string `json:"name" validate:"required,max=256"`
+	ID     string `json:"id,omitempty"`
+	Name   string `json:"name,omitempty" validate:"required,max=256"`
+	Status string `json:"status,omitempty" validate:"required"`
+}
+
+type ResponseMutation struct {
+	Status  string `json:"status,omitempty"`
+	Message string `json:"message,omitempty"`
 }

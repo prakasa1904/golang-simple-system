@@ -1,6 +1,6 @@
 package member
 
-func UserToResponse(member *Entity) *Response {
+func EntityToResponse(member *Entity) *Response {
 	return &Response{
 		ID:        member.ID,
 		Fullname:  member.Fullname,

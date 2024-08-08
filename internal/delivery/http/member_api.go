@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/devetek/go-core/render"
+	"github.com/devetek/golang-webapp-boilerplate/internal/helper"
 	"github.com/devetek/golang-webapp-boilerplate/internal/services/member"
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
@@ -54,9 +55,9 @@ func (c *MemberAPIController) Add(w http.ResponseWriter, r *http.Request) {
 		c.log.Warnf("Find users error : %+v", err)
 	}
 
-	filter := member.ConvertQueryToFilter(currentURL)
-	limit := member.ConvertQueryToLimit(currentURL)
-	order := member.ConvertQueryToOrder(currentURL)
+	filter := helper.ConvertQueryToFilter(currentURL, member.AllowedFilterQuery)
+	limit := helper.ConvertQueryToLimit(currentURL)
+	order := helper.ConvertQueryToOrder(currentURL)
 
 	users, err := c.myUsecase.Find(r.Context(), filter, limit, order)
 	if err != nil {
@@ -84,9 +85,9 @@ func (c *MemberAPIController) Find(w http.ResponseWriter, r *http.Request) {
 		c.log.Warnf("Parse payload current url error : %+v", err)
 	}
 
-	filter := member.ConvertQueryToFilter(currentURL)
-	limit := member.ConvertQueryToLimit(currentURL)
-	order := member.ConvertQueryToOrder(currentURL)
+	filter := helper.ConvertQueryToFilter(currentURL, member.AllowedFilterQuery)
+	limit := helper.ConvertQueryToLimit(currentURL)
+	order := helper.ConvertQueryToOrder(currentURL)
 
 	users, err := c.myUsecase.Find(r.Context(), filter, limit, order)
 	if err != nil {

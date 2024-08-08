@@ -1,0 +1,7 @@
+<%= if (groups && len(groups) > 0) { %>
+<%= for (group) in groups { %>
+<%= partial("views/pages/admin/group/group-item-content.html") %>
+<% } %>
+<% } else { %>
+<%= partial("views/pages/admin/group/group-item-empty.html") %>
+<% } %>

@@ -21,6 +21,7 @@ type RouteConfig struct {
 
 	// admin controller
 	AdminDashboardController *AdminDashboardController
+	AdminGroupController     *AdminGroupController
 	AdminMemberController    *AdminMemberController
 
 	// register API by service
@@ -40,6 +41,22 @@ func (c *RouteConfig) Setup(view *render.Engine) {
 func (c *RouteConfig) SetupMiddleware() {
 	c.Router.Use(middleware.Logger)
 }
+
+// func (c *RouteConfig) SetupAPItRoute() {
+// 	// post to mutate data based on repository
+// 	c.Router.Route("/api", func(r chi.Router) {
+// 		r.Route("/group", func(r chi.Router) {
+// 			r.Post("/create", c.GroupAPIController.Create)
+// 		})
+// 		r.Route("/member", func(r chi.Router) {
+// 			r.Post("/add", c.MemberAPIController.Add)
+// 			r.Post("/find", c.MemberAPIController.Find)
+// 		})
+// 		r.Route("/qr", func(r chi.Router) {
+// 			r.Post("/", c.QRController.View)
+// 		})
+// 	})
+// }
 
 func (c *RouteConfig) SetupStaticFileServing() {
 	var fs = http.FileServer(http.Dir("public"))
@@ -66,6 +83,20 @@ func (c *RouteConfig) SetupAdminRoute(view *render.Engine) {
 		r.Route("/member", func(r chi.Router) {
 			r.Get("/", c.AdminMemberController.Home)
 		})
+		r.Route("/group", func(r chi.Router) {
+			r.Get("/", c.AdminGroupController.Home)
+			// partial component UI
+			r.Route("/component", func(r chi.Router) {
+				r.Get("/list", c.AdminGroupController.ComponentList)
+				r.Get("/form/{action}", c.AdminGroupController.ComponentForm)
+				r.Get("/form/{action}/{id}", c.AdminGroupController.ComponentForm)
+			})
+			// mutation data and return status UI notification depend
+			r.Route("/mutation", func(r chi.Router) {
+				r.Post("/create", c.AdminGroupController.MutationCreate)
+				r.Post("/update", c.AdminGroupController.MutationUpdate)
+			})
+		})
 	})
 }
 
@@ -88,6 +119,10 @@ func (c *RouteConfig) SetupComponentRoute() {
 	})
 }
 
+/*
+*
+API use for frontend
+*/
 func (c *RouteConfig) SetupAPItRoute() {
 	// post to mutate data based on repository
 	c.Router.Route("/api", func(r chi.Router) {

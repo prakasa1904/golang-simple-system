@@ -34,7 +34,7 @@ func main() {
 	// Seeder for development
 	if env == "development" {
 		var email string = "admin@devetek.com"
-		result := db.First(orderModel, "email = ?", email)
+		result := db.First(memberModel, "email = ?", email)
 		if result.Error != nil {
 			log.Errorf("Create seed development error : %+v", result.Error)
 		}

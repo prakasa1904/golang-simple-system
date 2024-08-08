@@ -1,16 +1,20 @@
-<!DOCTYPE html>
-  <head>
-    <%= partial("views/components/container/admin/head.html") %>
-    <%= partial("views/components/container/admin/script.html") %>
-  </head>
-  <body class="bg-gray-50 dark:bg-gray-800">
-    <%= partial("views/components/container/admin/navbar.html") %>
-    <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
-      <%= partial("views/components/container/admin/sidebar.html") %>
-      <div id="main-content" class="relative w-full h-full overflow-y-auto bg-gray-50 lg:ml-64 dark:bg-gray-900">
-        <%= Tyield %>
-        <%= partial("views/components/container/admin/footer.html") %>
-      </div>
+<!doctype html>
+<head>
+  <%= partial("views/components/container/admin/head.html") %>
+  <%= partial("views/components/container/admin/script.html") %>
+</head>
+<body class="bg-gray-50 dark:bg-gray-800" hx-boost="true">
+  <div id="global-toaster"></div>
+  <%= partial("views/components/container/admin/navbar.html") %>
+  <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
+    <%= partial("views/components/container/admin/sidebar.html") %>
+    <div
+      id="main-content"
+      class="relative w-full h-full overflow-y-auto bg-gray-50 lg:ml-64 dark:bg-gray-900"
+    >
+      <%= Tyield %>
+      <%=
+        partial("views/components/container/admin/footer.html") %>
     </div>
-  </body>
-</html>
+  </div>
+</body>

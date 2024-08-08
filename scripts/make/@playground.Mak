@@ -3,6 +3,7 @@
 ################################################################################
 
 init: .bin-validator ## Init development runtime
+	@npm i
 	@touch panji_express.db
 	@go mod tidy
 	@sleep 5
