@@ -9,6 +9,7 @@ import (
 
 	"github.com/devetek/go-core/render"
 	"github.com/go-playground/validator/v10"
+	"github.com/prakasa1904/panji-express/internal/helper"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -50,9 +51,15 @@ func (c *AdminDashboardController) Home(w http.ResponseWriter, r *http.Request) 
 	c.setHeaderMeta()
 
 	// render page with template html (ejs)
-	err := c.view.HTML(w).RenderWithLayout("views/pages/admin/dashboard/admin-dashboard.html", c.layout)
-	if err != nil {
-		c.log.Warnf("Render error : %+v", err)
+	if helper.IsHTMXRequest(r.Header) {
+		err := c.view.HTML(w).RenderClean("views/pages/admin/dashboard/admin-dashboard.html")
+		if err != nil {
+			c.log.Warnf("Render error : %+v", err)
+		}
+	} else {
+		err := c.view.HTML(w).RenderWithLayout("views/pages/admin/dashboard/admin-dashboard.html", c.layout)
+		if err != nil {
+			c.log.Warnf("Render error : %+v", err)
+		}
 	}
-
 }

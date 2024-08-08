@@ -4,9 +4,12 @@ import (
 	"strconv"
 )
 
-func GroupToResponse(group *Entity) *Response {
+func EntityToResponse(group *Entity) *Response {
+	// convert uint64 to int64 to resolve bug with plush (ejs template)
+	var id int64 = int64(group.ID)
+
 	return &Response{
-		ID:        group.ID,
+		ID:        id,
 		Name:      group.Name,
 		Status:    group.Status,
 		CreatedAt: group.CreatedAt,

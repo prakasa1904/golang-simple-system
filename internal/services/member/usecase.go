@@ -27,7 +27,7 @@ func NewUseCase(db *gorm.DB, logger *logrus.Logger, validate *validator.Validate
 	}
 }
 
-func (c *UseCase) Create(ctx context.Context, request *RegisterRequest) (*Response, error) {
+func (c *UseCase) Create(ctx context.Context, request *RequestPayload) (*Response, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -50,19 +50,22 @@ func (c *UseCase) Create(ctx context.Context, request *RegisterRequest) (*Respon
 
 	password, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	if err != nil {
-		c.Log.Warnf("Failed to generate bcrype hash : %+v", err)
+		c.Log.Warnf("Failed to generate bcrypt hash : %+v", err)
 		return nil, err
 	}
 
+	// encrypt password
+	request.Password = string(password)
+	request.ConfirmPassword = string(password)
+
 	// new member
-	member := &Entity{
-		Fullname: request.Fullname,
-		Password: string(password),
-		Username: request.Username,
-		Email:    request.Email,
+	newmember, err := RequestPayloadToEntity(request)
+	if err != nil {
+		c.Log.Warnf("Failed convert payload to entity : %+v", err)
+		return nil, err
 	}
 
-	if err := c.Repository.Create(tx, member); err != nil {
+	if err := c.Repository.Create(tx, newmember); err != nil {
 		c.Log.Warnf("Failed create member to database : %+v", err)
 		return nil, err
 	}
@@ -72,7 +75,7 @@ func (c *UseCase) Create(ctx context.Context, request *RegisterRequest) (*Respon
 		return nil, err
 	}
 
-	return EntityToResponse(member), nil
+	return EntityToResponse(newmember), nil
 }
 
 func (c *UseCase) Find(ctx context.Context, filters map[string]string, limit int, order clause.OrderByColumn) (*[]Response, error) {
@@ -101,12 +104,12 @@ func (c *UseCase) Find(ctx context.Context, filters map[string]string, limit int
 	return memberResponse, nil
 }
 
-func (c *UseCase) GetByID(ctx context.Context, id any) (*Response, error) {
+func (c *UseCase) GetById(ctx context.Context, id any) (*Response, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
 	member := new(Entity)
-	err := c.Repository.GetByID(tx, member, id)
+	err := c.Repository.GetById(tx, member, id)
 	if err != nil {
 		c.Log.Warnf("Failed get member by ID from database : %+v", err)
 		return nil, err
@@ -121,4 +124,75 @@ func (c *UseCase) GetByID(ctx context.Context, id any) (*Response, error) {
 	memberResp := EntityToResponse(member)
 
 	return memberResp, nil
+}
+
+func (c *UseCase) Update(ctx context.Context, request *RequestPayload) (*Response, error) {
+	tx := c.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	err := c.Validate.Struct(request)
+	if err != nil {
+		c.Log.Warnf("Invalid request body : %+v", err)
+		return nil, err
+	}
+
+	// update password if exist
+	if request.Password != "" {
+		password, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
+		if err != nil {
+			c.Log.Warnf("Failed to generate bcrypt hash : %+v", err)
+			return nil, err
+		}
+
+		// encrypt password
+		request.Password = string(password)
+		request.ConfirmPassword = string(password)
+	}
+
+	member, err := RequestPayloadToEntity(request)
+	if err != nil {
+		c.Log.Warnf("Failed convert payload to entity : %+v", err)
+		return nil, err
+	}
+
+	if err := c.Repository.Update(tx, member); err != nil {
+		c.Log.Warnf("Failed create member to database : %+v", err)
+		return nil, err
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		c.Log.Warnf("Failed commit transaction : %+v", err)
+		return nil, err
+	}
+
+	return EntityToResponse(member), nil
+}
+
+func (c *UseCase) Delete(ctx context.Context, request *DeletePayload) (*Response, error) {
+	tx := c.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	err := c.Validate.Struct(request)
+	if err != nil {
+		c.Log.Warnf("Invalid request body : %+v", err)
+		return nil, err
+	}
+
+	member, err := DeletePayloadToEntity(request)
+	if err != nil {
+		c.Log.Warnf("Failed convert payload to entity : %+v", err)
+		return nil, err
+	}
+
+	if err := c.Repository.Delete(tx, member); err != nil {
+		c.Log.Warnf("Failed delete member to database : %+v", err)
+		return nil, err
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		c.Log.Warnf("Failed commit transaction : %+v", err)
+		return nil, err
+	}
+
+	return EntityToResponse(member), nil
 }

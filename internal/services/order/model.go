@@ -3,7 +3,7 @@ package order
 import (
 	"time"
 
-	"github.com/devetek/golang-webapp-boilerplate/internal/model"
+	"github.com/prakasa1904/panji-express/internal/model"
 	"gorm.io/datatypes"
 )
 

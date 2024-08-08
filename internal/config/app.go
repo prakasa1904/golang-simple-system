@@ -2,9 +2,9 @@ package config
 
 import (
 	"github.com/devetek/go-core/render"
-	"github.com/devetek/golang-webapp-boilerplate/internal/delivery/http"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
+	"github.com/prakasa1904/panji-express/internal/delivery/http"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"

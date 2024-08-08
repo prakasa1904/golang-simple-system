@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/devetek/go-core/render"
-	"github.com/devetek/golang-webapp-boilerplate/internal/helper"
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/member"
 	"github.com/go-playground/validator/v10"
+	"github.com/prakasa1904/panji-express/internal/helper"
+	"github.com/prakasa1904/panji-express/internal/services/member"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -46,7 +46,7 @@ func (c *HomeController) Home(w http.ResponseWriter, r *http.Request) {
 
 	filter := helper.ConvertQueryToFilter(r.URL, member.AllowedFilterQuery)
 	limit := helper.ConvertQueryToLimit(r.URL)
-	order := helper.ConvertQueryToOrder(r.URL)
+	order := helper.ConvertQueryToOrder(r.URL, "")
 
 	users, err := c.myUsecase.Find(r.Context(), filter, limit, order)
 	if err != nil {
@@ -68,7 +68,7 @@ func (c *HomeController) Component(w http.ResponseWriter, r *http.Request) {
 
 	filter := helper.ConvertQueryToFilter(r.URL, member.AllowedFilterQuery)
 	limit := helper.ConvertQueryToLimit(r.URL)
-	order := helper.ConvertQueryToOrder(r.URL)
+	order := helper.ConvertQueryToOrder(r.URL, "")
 
 	users, err := c.myUsecase.Find(r.Context(), filter, limit, order)
 	if err != nil {

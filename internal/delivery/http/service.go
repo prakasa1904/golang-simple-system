@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/devetek/go-core/render"
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/member"
 	"github.com/go-playground/validator/v10"
+	"github.com/prakasa1904/panji-express/internal/services/member"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/devetek/go-core/render"
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/whatsapp"
+	"github.com/prakasa1904/panji-express/internal/services/whatsapp"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )

@@ -1,4 +1,4 @@
-module github.com/devetek/golang-webapp-boilerplate
+module github.com/prakasa1904/panji-express
 
 go 1.21
 

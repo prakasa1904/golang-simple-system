@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/devetek/go-core/render"
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/qr"
+	"github.com/prakasa1904/panji-express/internal/services/qr"
 	"github.com/sirupsen/logrus"
 	qrcode "github.com/skip2/go-qrcode"
 	"github.com/spf13/viper"
