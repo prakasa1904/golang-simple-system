@@ -3,10 +3,10 @@ package main
 import (
 	"os"
 
-	"github.com/devetek/golang-webapp-boilerplate/internal/config"
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/group"
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/member"
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/order"
+	"github.com/prakasa1904/panji-express/internal/config"
+	"github.com/prakasa1904/panji-express/internal/services/group"
+	"github.com/prakasa1904/panji-express/internal/services/member"
+	"github.com/prakasa1904/panji-express/internal/services/order"
 )
 
 func main() {

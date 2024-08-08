@@ -3,7 +3,7 @@ package member
 import (
 	"time"
 
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/group"
+	"github.com/prakasa1904/panji-express/internal/services/group"
 )
 
 type Entity struct {

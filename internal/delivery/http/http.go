@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/devetek/go-core/render"
-	"github.com/devetek/golang-webapp-boilerplate/internal/delivery/http/middlewares"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/prakasa1904/panji-express/internal/delivery/http/middlewares"
 )
 
 // register your controller

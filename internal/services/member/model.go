@@ -3,8 +3,8 @@ package member
 import (
 	"time"
 
-	"github.com/devetek/golang-webapp-boilerplate/internal/model"
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/group"
+	"github.com/prakasa1904/panji-express/internal/model"
+	"github.com/prakasa1904/panji-express/internal/services/group"
 )
 
 type Response struct {

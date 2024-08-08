@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	"github.com/devetek/go-core/render"
-	"github.com/devetek/golang-webapp-boilerplate/internal/helper"
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/group"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
+	"github.com/prakasa1904/panji-express/internal/helper"
+	"github.com/prakasa1904/panji-express/internal/services/group"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )

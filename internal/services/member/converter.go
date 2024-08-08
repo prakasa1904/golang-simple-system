@@ -3,7 +3,7 @@ package member
 import (
 	"strconv"
 
-	"github.com/devetek/golang-webapp-boilerplate/internal/services/group"
+	"github.com/prakasa1904/panji-express/internal/services/group"
 )
 
 func EntityToResponse(member *Entity) *Response {
