@@ -90,11 +90,13 @@ func (c *RouteConfig) SetupAdminRoute(view *render.Engine) {
 				r.Get("/list", c.AdminGroupController.ComponentList)
 				r.Get("/form/{action}", c.AdminGroupController.ComponentForm)
 				r.Get("/form/{action}/{id}", c.AdminGroupController.ComponentForm)
+				r.Get("/delete/{id}", c.AdminGroupController.ComponentDelete)
 			})
 			// mutation data and return status UI notification depend
 			r.Route("/mutation", func(r chi.Router) {
 				r.Post("/create", c.AdminGroupController.MutationCreate)
 				r.Post("/update", c.AdminGroupController.MutationUpdate)
+				r.Delete("/delete/{id}", c.AdminGroupController.MutationDelete)
 			})
 		})
 	})

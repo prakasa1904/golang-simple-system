@@ -3,8 +3,8 @@ package http
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/devetek/go-core/render"
@@ -118,6 +118,32 @@ func (c *AdminGroupController) ComponentForm(w http.ResponseWriter, r *http.Requ
 	}
 }
 
+func (c *AdminGroupController) ComponentDelete(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	// set all view data, if not set data will use cache and causing invalid data
+	c.view.Set("group", nil)
+
+	// edit form
+	if id != "" {
+		group, err := c.myUsecase.GetById(r.Context(), id)
+		if err != nil {
+			c.log.Warnf("Find groups error : %+v", err)
+		}
+
+		// require to validate because groups is just pointer
+		if group != nil {
+			c.view.Set("group", group)
+		}
+	}
+
+	// render page with template html (ejs)
+	err := c.view.HTML(w).RenderClean("views/pages/admin/group/delete-group-content.html")
+	if err != nil {
+		c.log.Warnf("Render error : %+v", err)
+	}
+}
+
 func (c *AdminGroupController) MutationCreate(w http.ResponseWriter, r *http.Request) {
 	var frontendResp = group.ResponseMutation{
 		Status: "Sukses",
@@ -127,10 +153,6 @@ func (c *AdminGroupController) MutationCreate(w http.ResponseWriter, r *http.Req
 	if err != nil {
 		c.log.Warnf("Json decoder error : %+v", err)
 	}
-
-	log.Println("payloadpayloadpayload")
-	log.Println(payload)
-	log.Println("payloadpayloadpayload")
 
 	newGroup, err := c.myUsecase.Create(r.Context(), payload)
 	if err != nil {
@@ -165,17 +187,61 @@ func (c *AdminGroupController) MutationUpdate(w http.ResponseWriter, r *http.Req
 		c.log.Warnf("Json decoder error : %+v", err)
 	}
 
-	newGroup, err := c.myUsecase.Update(r.Context(), payload)
+	updatedGroup, err := c.myUsecase.Update(r.Context(), payload)
 	if err != nil {
 		frontendResp.Status = "Gagal"
 		frontendResp.Message = fmt.Sprintf("Gagal memperbaharui group %s, %v", payload.Name, err)
 
-		c.log.Warnf("Create group error : %+v", err)
+		c.log.Warnf("Update group error : %+v", err)
 	}
 
-	if newGroup != nil {
+	if updatedGroup != nil {
 		// success message
-		frontendResp.Message = "Berhasil memperbaharui group " + newGroup.Name
+		frontendResp.Message = "Berhasil memperbaharui group " + updatedGroup.Name
+	}
+
+	c.view.Set("toasterTitle", frontendResp.Status)
+	c.view.Set("toasterDescription", frontendResp.Message)
+
+	// render page with template html (ejs)
+	err = c.view.HTML(w).RenderClean("views/components/toaster/toaster.html")
+	if err != nil {
+		c.log.Warnf("Render error : %+v", err)
+	}
+}
+
+func (c *AdminGroupController) MutationDelete(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	var frontendResp = group.ResponseMutation{
+		Status: "Sukses",
+	}
+
+	var payload = new(group.RequestPayload)
+	if id != "" {
+		group, err := c.myUsecase.GetById(r.Context(), id)
+		if err != nil {
+			c.log.Warnf("Find groups error : %+v", err)
+		}
+
+		// require to validate because groups is just pointer
+		if group != nil {
+			payload.ID = id
+			payload.Name = group.Name
+			payload.Status = strconv.Itoa(group.Status)
+		}
+	}
+
+	deletedGroup, err := c.myUsecase.Delete(r.Context(), payload)
+	if err != nil {
+		frontendResp.Status = "Gagal"
+		frontendResp.Message = fmt.Sprintf("Gagal menghapus group %s, %v", payload.Name, err)
+
+		c.log.Warnf("Delete group error : %+v", err)
+	}
+
+	if deletedGroup != nil {
+		// success message
+		frontendResp.Message = "Berhasil menghapus group " + deletedGroup.Name
 	}
 
 	c.view.Set("toasterTitle", frontendResp.Status)

@@ -21,6 +21,11 @@ type RequestPayload struct {
 	Status string `json:"status,omitempty" validate:"required"`
 }
 
+type DeletePayload struct {
+	model.Request
+	ID string `json:"id,omitempty"`
+}
+
 type ResponseMutation struct {
 	Status  string `json:"status,omitempty"`
 	Message string `json:"message,omitempty"`
