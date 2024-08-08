@@ -8,13 +8,9 @@
   </div>
   <ul class="grid w-full gap-6 md:grid-cols-3">
     <%= if (users && len(users) > 0) { %>
-    <!-- divider -->
     <%= for (data) in users { %>
-    <!-- divider -->
     <%= partial("views/components/card/index.html") %>
-    <!-- divider -->
     <% } %>
-    <!-- divider -->
     <% } else { %>
     <span>Tidak ada data ditemukan.</span>
     <% } %>

@@ -4,15 +4,17 @@ import (
 	"time"
 
 	"github.com/devetek/golang-webapp-boilerplate/internal/model"
+	"github.com/devetek/golang-webapp-boilerplate/internal/services/group"
 )
 
 type Response struct {
-	ID        uint64    `json:"id,omitempty"`
-	Fullname  string    `json:"fullname,omitempty"`
-	Email     string    `json:"email,omitempty"`
-	Username  string    `json:"username,omitempty"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	ID        uint64         `json:"id,omitempty"`
+	Fullname  string         `json:"fullname,omitempty"`
+	Email     string         `json:"email,omitempty"`
+	Username  string         `json:"username,omitempty"`
+	CreatedAt time.Time      `json:"created_at,omitempty"`
+	UpdatedAt time.Time      `json:"updated_at,omitempty"`
+	Group     group.Response `json:"group,omitempty"`
 }
 
 type RegisterRequest struct {

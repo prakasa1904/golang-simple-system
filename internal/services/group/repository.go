@@ -29,13 +29,7 @@ func (r *Repository) Delete(db *gorm.DB, entity *Entity) error {
 	return db.Delete(entity).Error
 }
 
-func (r *Repository) CountById(db *gorm.DB, id any) (int64, error) {
-	var total int64
-	err := db.Model(new(Entity)).Where("id = ?", id).Count(&total).Error
-	return total, err
-}
-
-func (r *Repository) FindById(db *gorm.DB, entity *Entity, id any) error {
+func (r *Repository) GetById(db *gorm.DB, entity *Entity, id any) error {
 	return db.Where("id = ?", id).Take(entity).Error
 }
 
@@ -45,7 +39,7 @@ func (r *Repository) CountByName(db *gorm.DB, name any) (int64, error) {
 	return total, err
 }
 
-func (r *Repository) FindByName(db *gorm.DB, group *Entity, name string) error {
+func (r *Repository) GetByName(db *gorm.DB, group *Entity, name string) error {
 	return db.Where("name = ?", name).First(group).Error
 }
 

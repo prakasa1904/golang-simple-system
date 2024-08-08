@@ -1,4 +1,4 @@
-package member
+package helper
 
 import (
 	"net/url"
@@ -29,11 +29,11 @@ func ConvertQueryToLimit(url *url.URL) int {
 	return limit
 }
 
-func ConvertQueryToFilter(url *url.URL) map[string]string {
+func ConvertQueryToFilter(url *url.URL, allowFilterQuery []string) map[string]string {
 	var filter = make(map[string]string)
 
 	for key, val := range url.Query() {
-		for _, allowKey := range AllowedFilterQuery {
+		for _, allowKey := range allowFilterQuery {
 			if allowKey == key {
 				filter[key+" LIKE ?"] = "%" + val[0] + "%"
 			}

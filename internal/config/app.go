@@ -36,6 +36,13 @@ func Bootstrap(config *BootstrapConfig) {
 		config.Validate,
 		config.Config.GetString("view.administrator"),
 	)
+	adminGroupController := http.NewAdminGroupController(
+		config.DB,
+		config.Log,
+		config.View,
+		config.Validate,
+		config.Config.GetString("view.administrator"),
+	)
 	adminMemberController := http.NewAdminMemberController(
 		config.DB,
 		config.Log,
@@ -54,6 +61,7 @@ func Bootstrap(config *BootstrapConfig) {
 		MemberAPIController:      memberAPIController,
 		QRController:             qrController,
 		AdminDashboardController: adminDashboardController,
+		AdminGroupController:     adminGroupController,
 		AdminMemberController:    adminMemberController,
 	}
 

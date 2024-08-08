@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/devetek/go-core/render"
+	"github.com/devetek/golang-webapp-boilerplate/internal/helper"
 	"github.com/devetek/golang-webapp-boilerplate/internal/services/member"
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
@@ -43,9 +44,9 @@ func (c *FindController) setHeaderMeta() {
 func (c *FindController) Home(w http.ResponseWriter, r *http.Request) {
 	c.setHeaderMeta()
 
-	filter := member.ConvertQueryToFilter(r.URL)
-	limit := member.ConvertQueryToLimit(r.URL)
-	order := member.ConvertQueryToOrder(r.URL)
+	filter := helper.ConvertQueryToFilter(r.URL, member.AllowedFilterQuery)
+	limit := helper.ConvertQueryToLimit(r.URL)
+	order := helper.ConvertQueryToOrder(r.URL)
 
 	users, err := c.myUsecase.Find(r.Context(), filter, limit, order)
 	if err != nil {
@@ -65,9 +66,9 @@ func (c *FindController) Home(w http.ResponseWriter, r *http.Request) {
 func (c *FindController) Component(w http.ResponseWriter, r *http.Request) {
 	c.setHeaderMeta()
 
-	filter := member.ConvertQueryToFilter(r.URL)
-	limit := member.ConvertQueryToLimit(r.URL)
-	order := member.ConvertQueryToOrder(r.URL)
+	filter := helper.ConvertQueryToFilter(r.URL, member.AllowedFilterQuery)
+	limit := helper.ConvertQueryToLimit(r.URL)
+	order := helper.ConvertQueryToOrder(r.URL)
 
 	users, err := c.myUsecase.Find(r.Context(), filter, limit, order)
 	if err != nil {
