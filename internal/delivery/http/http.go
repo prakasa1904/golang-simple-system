@@ -23,6 +23,8 @@ type RouteConfig struct {
 	AdminDashboardController *AdminDashboardController
 	AdminGroupController     *AdminGroupController
 	AdminMemberController    *AdminMemberController
+	AdminOrderController     *AdminOrderController
+	AdminSettingController   *AdminSettingController
 
 	// register API by service
 	MemberAPIController *MemberAPIController
@@ -80,6 +82,22 @@ func (c *RouteConfig) SetupAdminRoute(view *render.Engine) {
 		r.Route("/", func(r chi.Router) {
 			r.Get("/", c.AdminDashboardController.Home)
 		})
+		r.Route("/group", func(r chi.Router) {
+			r.Get("/", c.AdminGroupController.Home)
+			// partial component UI
+			r.Route("/component", func(r chi.Router) {
+				r.Get("/list", c.AdminGroupController.ComponentList)
+				r.Get("/form/{action}", c.AdminGroupController.ComponentForm)
+				r.Get("/form/{action}/{id}", c.AdminGroupController.ComponentForm)
+				r.Get("/delete/{id}", c.AdminGroupController.ComponentDelete)
+			})
+			// mutation data and return status UI notification depend
+			r.Route("/mutation", func(r chi.Router) {
+				r.Post("/create", c.AdminGroupController.MutationCreate)
+				r.Post("/update", c.AdminGroupController.MutationUpdate)
+				r.Delete("/delete/{id}", c.AdminGroupController.MutationDelete)
+			})
+		})
 		r.Route("/member", func(r chi.Router) {
 			r.Get("/", c.AdminMemberController.Home)
 			// partial component UI
@@ -96,21 +114,28 @@ func (c *RouteConfig) SetupAdminRoute(view *render.Engine) {
 				r.Delete("/delete/{id}", c.AdminMemberController.MutationDelete)
 			})
 		})
-		r.Route("/group", func(r chi.Router) {
-			r.Get("/", c.AdminGroupController.Home)
+		r.Route("/order", func(r chi.Router) {
+			r.Get("/", c.AdminOrderController.Home)
 			// partial component UI
 			r.Route("/component", func(r chi.Router) {
-				r.Get("/list", c.AdminGroupController.ComponentList)
-				r.Get("/form/{action}", c.AdminGroupController.ComponentForm)
-				r.Get("/form/{action}/{id}", c.AdminGroupController.ComponentForm)
-				r.Get("/delete/{id}", c.AdminGroupController.ComponentDelete)
+				r.Get("/list", c.AdminOrderController.ComponentList)
+				r.Get("/form/{action}", c.AdminOrderController.ComponentForm)
+				r.Get("/form/{action}/{id}", c.AdminOrderController.ComponentForm)
+				r.Get("/delete/{id}", c.AdminOrderController.ComponentDelete)
 			})
 			// mutation data and return status UI notification depend
 			r.Route("/mutation", func(r chi.Router) {
-				r.Post("/create", c.AdminGroupController.MutationCreate)
-				r.Post("/update", c.AdminGroupController.MutationUpdate)
-				r.Delete("/delete/{id}", c.AdminGroupController.MutationDelete)
+				r.Post("/create", c.AdminOrderController.MutationCreate)
+				r.Post("/update", c.AdminOrderController.MutationUpdate)
+				r.Delete("/delete/{id}", c.AdminOrderController.MutationDelete)
 			})
+		})
+		// init config for interact with core configuration
+		// admin profile
+		// whatsApp config
+		// etc...
+		r.Route("/setting", func(r chi.Router) {
+			r.Get("/", c.AdminSettingController.Home)
 		})
 	})
 }

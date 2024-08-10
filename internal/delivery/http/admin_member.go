@@ -1,9 +1,5 @@
 package http
 
-/**
-Reference: https://github.com/themesberg/flowbite-admin-dashboard
-*/
-
 import (
 	"encoding/json"
 	"fmt"
@@ -263,7 +259,7 @@ func (c *AdminMemberController) MutationDelete(w http.ResponseWriter, r *http.Re
 
 		// require to validate because members is just pointer
 		if data != nil {
-			payload.ID = id
+			payload.ID = uint64(data.ID)
 		}
 	}
 

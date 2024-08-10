@@ -21,9 +21,10 @@ run-hot: .bin-validator ## Run service development with hot reload
 migrate: .bin-validator ## Migrate database "make migrate env=beta"
 	@export ENV=$(env) && go run cmd/migrate/*.go
 
-clean-up: .bin-validator ## Cleanup database, create new with make init
+clean-up: .bin-validator ## Cleanup database, git branch, and cache
 	@rm panji_express.db
 	@rm panji_wa.db
+	@git branch | grep -v "main" | xargs git branch -D
 
 # hidden comment test go-core
 replace-local-core:

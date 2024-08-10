@@ -1,8 +1,7 @@
-package group
+package order
 
 import (
 	"context"
-	"errors"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
@@ -26,7 +25,7 @@ func NewUseCase(db *gorm.DB, logger *logrus.Logger, validate *validator.Validate
 	}
 }
 
-func (c *UseCase) Create(ctx context.Context, request *RequestPayload) (*Response, error) {
+func (c *UseCase) Create(ctx context.Context, request *CreatePayload) (*Response, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -36,25 +35,15 @@ func (c *UseCase) Create(ctx context.Context, request *RequestPayload) (*Respons
 		return nil, err
 	}
 
-	total, err := c.Repository.CountByName(tx, request.Name)
-	if err != nil {
-		c.Log.Warnf("Failed count group from database : %+v", err)
-		return nil, err
-	}
-
-	if total > 0 {
-		c.Log.Warnf("Group already exists : %+v", err)
-		return nil, errors.New("group already exists")
-	}
-
-	group, err := RequestToEntity(request)
+	// new order
+	neworder, err := CreatePayloadToEntity(request)
 	if err != nil {
 		c.Log.Warnf("Failed convert payload to entity : %+v", err)
 		return nil, err
 	}
 
-	if err := c.Repository.Create(tx, group); err != nil {
-		c.Log.Warnf("Failed create group to database : %+v", err)
+	if err := c.Repository.Create(tx, neworder); err != nil {
+		c.Log.Warnf("Failed create order to database : %+v", err)
 		return nil, err
 	}
 
@@ -63,17 +52,17 @@ func (c *UseCase) Create(ctx context.Context, request *RequestPayload) (*Respons
 		return nil, err
 	}
 
-	return EntityToResponse(group), nil
+	return EntityToResponse(neworder), nil
 }
 
 func (c *UseCase) Find(ctx context.Context, filters map[string]string, limit int, order clause.OrderByColumn) (*[]Response, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
-	groups := new([]Entity)
-	err := c.Repository.Find(tx, groups, filters, limit, order)
+	orders := new([]Entity)
+	err := c.Repository.Find(tx, orders, filters, limit, order)
 	if err != nil {
-		c.Log.Warnf("Failed count group from database : %+v", err)
+		c.Log.Warnf("Failed count order from database : %+v", err)
 		return nil, err
 	}
 
@@ -82,24 +71,24 @@ func (c *UseCase) Find(ctx context.Context, filters map[string]string, limit int
 		return nil, err
 	}
 
-	// map to response
-	var response = new([]Response)
-	for _, group := range *groups {
-		groupItem := EntityToResponse(&group)
-		*response = append(*response, *groupItem)
+	// append entity to response
+	var orderResponse = new([]Response)
+	for _, val := range *orders {
+		order := EntityToResponse(&val)
+		*orderResponse = append(*orderResponse, *order)
 	}
 
-	return response, nil
+	return orderResponse, nil
 }
 
 func (c *UseCase) GetById(ctx context.Context, id any) (*Response, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
-	group := new(Entity)
-	err := c.Repository.GetById(tx, group, id)
+	order := new(Entity)
+	err := c.Repository.GetById(tx, order, id)
 	if err != nil {
-		c.Log.Warnf("Failed count group from database : %+v", err)
+		c.Log.Warnf("Failed get order by ID from database : %+v", err)
 		return nil, err
 	}
 
@@ -108,10 +97,13 @@ func (c *UseCase) GetById(ctx context.Context, id any) (*Response, error) {
 		return nil, err
 	}
 
-	return EntityToResponse(group), nil
+	// convert entity to response
+	orderResp := EntityToResponse(order)
+
+	return orderResp, nil
 }
 
-func (c *UseCase) Update(ctx context.Context, request *RequestPayload) (*Response, error) {
+func (c *UseCase) Update(ctx context.Context, request *UpdatePayload) (*Response, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -121,14 +113,20 @@ func (c *UseCase) Update(ctx context.Context, request *RequestPayload) (*Respons
 		return nil, err
 	}
 
-	group, err := RequestToEntity(request)
+	// generate invoice
+
+	order, err := UpdatePayloadToEntity(request)
 	if err != nil {
 		c.Log.Warnf("Failed convert payload to entity : %+v", err)
 		return nil, err
 	}
 
-	if err := c.Repository.Update(tx, group); err != nil {
-		c.Log.Warnf("Failed create group to database : %+v", err)
+	// set invoice ID when status is pickedUp by courier
+	invoiceID := CreateInvoice(order.ID, order.CreatedAt)
+	order.InvoiceID = invoiceID
+
+	if err := c.Repository.Update(tx, order); err != nil {
+		c.Log.Warnf("Failed create order to database : %+v", err)
 		return nil, err
 	}
 
@@ -137,10 +135,10 @@ func (c *UseCase) Update(ctx context.Context, request *RequestPayload) (*Respons
 		return nil, err
 	}
 
-	return EntityToResponse(group), nil
+	return EntityToResponse(order), nil
 }
 
-func (c *UseCase) Delete(ctx context.Context, request *RequestPayload) (*Response, error) {
+func (c *UseCase) Delete(ctx context.Context, request *DeletePayload) (*Response, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -150,14 +148,14 @@ func (c *UseCase) Delete(ctx context.Context, request *RequestPayload) (*Respons
 		return nil, err
 	}
 
-	group, err := RequestToEntity(request)
+	order, err := DeletePayloadToEntity(request)
 	if err != nil {
 		c.Log.Warnf("Failed convert payload to entity : %+v", err)
 		return nil, err
 	}
 
-	if err := c.Repository.Delete(tx, group); err != nil {
-		c.Log.Warnf("Failed delete group to database : %+v", err)
+	if err := c.Repository.Delete(tx, order); err != nil {
+		c.Log.Warnf("Failed delete order to database : %+v", err)
 		return nil, err
 	}
 
@@ -166,5 +164,5 @@ func (c *UseCase) Delete(ctx context.Context, request *RequestPayload) (*Respons
 		return nil, err
 	}
 
-	return EntityToResponse(group), nil
+	return EntityToResponse(order), nil
 }

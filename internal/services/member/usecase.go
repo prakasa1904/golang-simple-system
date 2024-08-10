@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -48,15 +47,17 @@ func (c *UseCase) Create(ctx context.Context, request *RequestPayload) (*Respons
 		return nil, errors.New("member already exists")
 	}
 
-	password, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
-	if err != nil {
-		c.Log.Warnf("Failed to generate bcrypt hash : %+v", err)
-		return nil, err
-	}
+	if request.Password != "" {
+		strongPass, err := CreatePassword(request.Password)
+		if err != nil {
+			c.Log.Warnf("Failed to generate bcrypt hash : %+v", err)
+			return nil, err
+		}
 
-	// encrypt password
-	request.Password = string(password)
-	request.ConfirmPassword = string(password)
+		// encrypt password
+		request.Password = strongPass
+		request.ConfirmPassword = strongPass
+	}
 
 	// new member
 	newmember, err := RequestPayloadToEntity(request)
@@ -138,15 +139,15 @@ func (c *UseCase) Update(ctx context.Context, request *RequestPayload) (*Respons
 
 	// update password if exist
 	if request.Password != "" {
-		password, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
+		strongPass, err := CreatePassword(request.Password)
 		if err != nil {
 			c.Log.Warnf("Failed to generate bcrypt hash : %+v", err)
 			return nil, err
 		}
 
 		// encrypt password
-		request.Password = string(password)
-		request.ConfirmPassword = string(password)
+		request.Password = strongPass
+		request.ConfirmPassword = strongPass
 	}
 
 	member, err := RequestPayloadToEntity(request)

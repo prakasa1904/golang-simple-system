@@ -5,6 +5,7 @@ database:
   name: panji_express.db
   username: username
   password: password
+  location: "Asia/Jakarta"
 whatsapp:
   dbdriver: sqlite
   dbname: panji_wa.db
