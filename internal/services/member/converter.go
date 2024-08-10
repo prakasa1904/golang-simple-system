@@ -1,9 +1,8 @@
 package member
 
 import (
-	"strconv"
-
 	"github.com/prakasa1904/panji-express/internal/services/group"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func EntityToResponse(member *Entity) *Response {
@@ -29,26 +28,30 @@ func EntityToResponse(member *Entity) *Response {
 
 func RequestPayloadToEntity(payload *RequestPayload) (*Entity, error) {
 	entity := new(Entity)
-	// ignore error on converting ID, insert no require to has ID
-	id, _ := strconv.ParseUint(payload.ID, 0, 64)
-	gid, _ := strconv.ParseUint(payload.GroupID, 0, 64)
 
-	entity.ID = id
+	entity.ID = payload.ID
 	entity.Fullname = payload.Fullname
 	entity.Username = payload.Username
 	entity.Email = payload.Email
 	entity.Password = payload.Password
-	entity.GroupID = gid
+	entity.GroupID = payload.GroupID
 
 	return entity, nil
 }
 
 func DeletePayloadToEntity(payload *DeletePayload) (*Entity, error) {
 	entity := new(Entity)
-	// ignore error on converting ID, insert no require to has ID
-	id, _ := strconv.ParseUint(payload.ID, 0, 64)
 
-	entity.ID = id
+	entity.ID = payload.ID
 
 	return entity, nil
+}
+
+func CreatePassword(plainPassword string) (string, error) {
+	password, err := bcrypt.GenerateFromPassword([]byte(plainPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+
+	return string(password), err
 }

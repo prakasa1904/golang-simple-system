@@ -1,0 +1,53 @@
+<h5
+  id="drawer-label"
+  class="inline-flex items-center mb-6 text-sm font-semibold text-gray-500 uppercase dark:text-gray-400"
+>
+  <%= formTitle %>
+  order
+</h5>
+<form
+  hx-target="#global-toaster"
+  hx-swap="innerHTML"
+  hx-post="/admin/order/mutation/<%= action %>"
+  hx-refetch-url="/admin/order/component/list"
+  hx-refetch-method="GET"
+  hx-refetch-target="#order-items"
+  hx-refetch-with-query="true"
+  hx-ext="json-enc,refetch-url"
+  hx-on::after-request="initDismisses(); <%= if (action == "create") { %>this.reset();<% } %>"
+>
+  <!-- hidden field for ID -->
+  <input type="hidden" name="id" value="<%= if (order.ID) { %><%= order.ID %><% } %>" />
+  <!-- update to use session later -->
+  <input type="hidden" name="member_id" value="<%= if (order.MemberID) { %><%= order.MemberID %><% } else { %>2<% } %>" />
+  <input type="hidden" name="invoice_id" value="<%= if (order.InvoiceID) { %><%= order.InvoiceID %><% } else { %><% } %>" />
+  <input type="hidden" name="created_at" value="<%= if (order.CreatedAt) { %><%= order.CreatedAt %><% } else { %><% } %>"
+  />
+  <!-- hidden field for ID -->
+  <div class="space-y-4">
+    <div>
+      <label
+        for="description"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >Description</label
+      >
+      <textarea
+        id="description"
+        rows="4"
+        name="description"
+        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+        placeholder="Masukkan deskripsi dokumen"
+      ><%= if (order.Description) { %><%= order.Description %><% } %></textarea>
+    </div>
+  </div>
+  <div
+    class="bottom-0 left-0 flex justify-center w-full pb-4 mt-4 space-x-4 sm:absolute sm:px-4 sm:mt-0"
+  >
+    <button
+      type="submit"
+      class="w-full justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+    >
+      <%= action %>
+    </button>
+  </div>
+</form>

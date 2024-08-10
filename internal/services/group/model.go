@@ -16,14 +16,14 @@ type Response struct {
 
 type RequestPayload struct {
 	model.Request
-	ID     string `json:"id,omitempty"`
-	Name   string `json:"name,omitempty" validate:"required,max=256"`
-	Status string `json:"status,omitempty" validate:"required"`
+	ID     uint64 `json:"id,omitempty"`
+	Name   string `json:"name,omitempty" validate:"required,max=100"`
+	Status int    `json:"status,omitempty" validate:"required"`
 }
 
 type DeletePayload struct {
 	model.Request
-	ID string `json:"id,omitempty"`
+	ID uint64 `json:"id,omitempty"`
 }
 
 type ResponseMutation struct {

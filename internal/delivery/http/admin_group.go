@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/devetek/go-core/render"
@@ -231,11 +230,14 @@ func (c *AdminGroupController) MutationDelete(w http.ResponseWriter, r *http.Req
 			c.log.Warnf("Find groups error : %+v", err)
 		}
 
+		// convert ID
+		var groupIDUint64 = uint64(group.ID)
+
 		// require to validate because groups is just pointer
 		if group != nil {
-			payload.ID = id
+			payload.ID = groupIDUint64
 			payload.Name = group.Name
-			payload.Status = strconv.Itoa(group.Status)
+			payload.Status = group.Status
 		}
 	}
 

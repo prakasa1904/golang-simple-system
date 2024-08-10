@@ -1,9 +1,5 @@
 package http
 
-/**
-Reference: https://github.com/themesberg/flowbite-admin-dashboard
-*/
-
 import (
 	"net/http"
 

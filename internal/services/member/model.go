@@ -22,18 +22,18 @@ type Response struct {
 
 type RequestPayload struct {
 	model.Request
-	ID              string `json:"id"`
+	ID              uint64 `json:"id"`
 	Fullname        string `json:"fullname"`
 	Username        string `json:"username" validate:"max=100"`
 	Email           string `json:"email" validate:"required,max=100"`
 	Password        string `json:"password"`
 	ConfirmPassword string `json:"confirm_password"`
-	GroupID         string `json:"group_id" validate:"required"`
+	GroupID         uint64 `json:"group_id" validate:"required"`
 }
 
 type DeletePayload struct {
 	model.Request
-	ID string `json:"id,omitempty"`
+	ID uint64 `json:"id,omitempty"`
 }
 
 // TODO: Might be deprecate

@@ -1,0 +1,7 @@
+<%= if (orders && len(orders) > 0) { %>
+<%= for (order) in orders { %>
+<%= partial("views/pages/admin/order/order-item-content.html") %>
+<% } %>
+<% } else { %>
+<%= partial("views/pages/admin/order/order-item-empty.html") %>
+<% } %>
