@@ -23,6 +23,13 @@
         "aria-valid-attr-value": "off"
       }
     ],
-    "axe/name-role-value": "off"
+    "axe/name-role-value": "off",
+    "axe/structure": [
+      "default",
+      {
+        "list": "off",
+        "listitem": "off"
+      }
+    ]
   }
 }

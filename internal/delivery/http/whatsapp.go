@@ -39,11 +39,11 @@ func (c *WhatsappController) Home(w http.ResponseWriter, r *http.Request) {
 	c.setHeaderMeta()
 
 	// listen WA event in paralel go routine
-	c.myRepository.ListenQRCode()
+	// c.myRepository.ListenQRCode()
 
-	qrCode := c.myRepository.GetQRCode()
+	// qrCode := c.myRepository.GetQRCode()
 
-	c.view.Set("qrcode", qrCode)
+	c.view.Set("qrcode", "")
 
 	// render page with template html (ejs)
 	err := c.view.HTML(w).Render("views/pages/whatsapp/index.html")

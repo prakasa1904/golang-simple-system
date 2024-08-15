@@ -1,0 +1,21 @@
+<main>
+  <div
+    class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700"
+  >
+    <div class="w-full mb-1">
+      <%= partial("views/components/container/admin/breadcrumb.html") %>
+    </div>
+  </div>
+  <!-- start container content -->
+  <div class="flex flex-col">
+    <div class="overflow-x-auto">
+      <div class="overflow-hidden shadow">
+        <!-- start content -->
+        <%= partial("views/pages/admin/setting-channel/admin-setting-channel-content.html") %>
+        <!-- end content -->
+      </div>
+    </div>
+  </div>
+  <!-- container end content -->
+</main>
+<%= partial("views/components/container/admin/footer.html") %>
