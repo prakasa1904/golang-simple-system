@@ -12,20 +12,25 @@ import (
 	"github.com/prakasa1904/panji-express/internal/helper"
 	"github.com/prakasa1904/panji-express/internal/model"
 	"github.com/prakasa1904/panji-express/internal/services/group"
+	"github.com/prakasa1904/panji-express/internal/services/member"
 	"github.com/prakasa1904/panji-express/internal/services/order"
+	"github.com/prakasa1904/panji-express/internal/services/whatsapp"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
 type AdminOrderController struct {
-	log          *logrus.Logger
-	view         *render.Engine
-	groupUsecase *group.UseCase
-	myUsecase    *order.UseCase
-	layout       string
+	log           *logrus.Logger
+	view          *render.Engine
+	groupUsecase  *group.UseCase
+	memberUsecase *member.UseCase
+	myUsecase     *order.UseCase
+	waRepository  *whatsapp.Repository
+	layout        string
 }
 
 func NewAdminOrderController(
+	wa *whatsapp.Repository,
 	db *gorm.DB,
 	log *logrus.Logger,
 	view *render.Engine,
@@ -34,18 +39,25 @@ func NewAdminOrderController(
 ) *AdminOrderController {
 	// init repositories
 	groupRepository := group.NewRepository(log)
+	memberUsecaseRepository := member.NewRepository(log)
 	myRepository := order.NewRepository(log)
+
+	// run background from setting channel
+	// go waRepository.Run()
 
 	// init usecases
 	groupUsecase := group.NewUseCase(db, log, validate, groupRepository)
+	memberUsecase := member.NewUseCase(db, log, validate, memberUsecaseRepository)
 	myUsecase := order.NewUseCase(db, log, validate, myRepository)
 
 	return &AdminOrderController{
-		log:          log,
-		groupUsecase: groupUsecase,
-		myUsecase:    myUsecase,
-		view:         view,
-		layout:       layout,
+		log:           log,
+		groupUsecase:  groupUsecase,
+		memberUsecase: memberUsecase,
+		myUsecase:     myUsecase,
+		waRepository:  wa,
+		view:          view,
+		layout:        layout,
 	}
 }
 
@@ -188,6 +200,17 @@ func (c *AdminOrderController) MutationCreate(w http.ResponseWriter, r *http.Req
 	if neworder != nil {
 		// success message
 		frontendResp.Message = "Berhasil membuat order"
+
+		// need to improve to get dynamic courier data
+		courier, err := c.memberUsecase.GetByGroupName(r.Context(), "Courier")
+		if err != nil {
+			c.log.Warnf("Failed to send notification to courier : %+v", err)
+		}
+
+		message := fmt.Sprintf("Hi %s, ada pesanan pengiriman dokumen baru, dengan detail '%s'", courier.Fullname, neworder.Description)
+
+		// send message to courier
+		c.waRepository.SendMessage(courier.Phone, message)
 	}
 
 	c.view.Set("toasterTitle", frontendResp.Status)

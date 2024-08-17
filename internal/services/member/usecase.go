@@ -127,6 +127,28 @@ func (c *UseCase) GetById(ctx context.Context, id any) (*Response, error) {
 	return memberResp, nil
 }
 
+func (c *UseCase) GetByGroupName(ctx context.Context, groupName any) (*Response, error) {
+	tx := c.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	member := new(Entity)
+	err := c.Repository.GetByGroupName(tx, member, groupName)
+	if err != nil {
+		c.Log.Warnf("Failed get member by group name from database : %+v", err)
+		return nil, err
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		c.Log.Warnf("Failed commit transaction : %+v", err)
+		return nil, err
+	}
+
+	// convert entity to response
+	memberResp := EntityToResponse(member)
+
+	return memberResp, nil
+}
+
 func (c *UseCase) Update(ctx context.Context, request *RequestPayload) (*Response, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()

@@ -16,6 +16,7 @@ func EntityToResponse(member *Entity) *Response {
 		ID:              id,
 		Fullname:        member.Fullname,
 		Username:        member.Username,
+		Phone:           member.Phone,
 		Email:           member.Email,
 		Password:        member.Password,
 		ConfirmPassword: member.Password,
@@ -32,6 +33,7 @@ func RequestPayloadToEntity(payload *RequestPayload) (*Entity, error) {
 	entity.ID = payload.ID
 	entity.Fullname = payload.Fullname
 	entity.Username = payload.Username
+	entity.Phone = payload.Phone
 	entity.Email = payload.Email
 	entity.Password = payload.Password
 	entity.GroupID = payload.GroupID

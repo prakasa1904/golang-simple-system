@@ -42,6 +42,12 @@ func (r *Repository) GetById(db *gorm.DB, entity *Entity, id any) error {
 	}).Where("`member`.`id` = ?", id).Take(entity).Error
 }
 
+func (r *Repository) GetByGroupName(db *gorm.DB, entity *Entity, name any) error {
+	return db.Joins("Group", func(db *gorm.DB) *gorm.DB {
+		return db.Select(group.SelectColumn)
+	}).Where("`group`.`name` = ?", name).Take(entity).Error
+}
+
 func (r *Repository) CountByUsername(db *gorm.DB, username any) (int64, error) {
 	var total int64
 	err := db.Model(new(Entity)).Where("username = ?", username).Count(&total).Error

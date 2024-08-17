@@ -11,13 +11,12 @@ import (
 
 // register your controller
 type RouteConfig struct {
-	Router             *chi.Mux
-	HomeController     *HomeController
-	FindController     *FindController
-	AboutController    *AboutController
-	ServiceController  *ServiceController
-	WhatsappController *WhatsappController
-	QRController       *QRController
+	Router            *chi.Mux
+	HomeController    *HomeController
+	FindController    *FindController
+	AboutController   *AboutController
+	ServiceController *ServiceController
+	QRController      *QRController
 
 	// admin controller
 	AdminDashboardController      *AdminDashboardController
@@ -72,7 +71,6 @@ func (c *RouteConfig) SetupGuestRoute() {
 	c.Router.Get("/find", c.FindController.Home)
 	c.Router.Get("/service", c.ServiceController.Home)
 	c.Router.Get("/about", c.AboutController.Home)
-	c.Router.Get("/whatsapp", c.WhatsappController.Home)
 }
 
 func (c *RouteConfig) SetupAdminRoute(view *render.Engine) {
@@ -137,7 +135,11 @@ func (c *RouteConfig) SetupAdminRoute(view *render.Engine) {
 		// etc...
 		r.Route("/setting", func(r chi.Router) {
 			r.Get("/", c.AdminSettingController.Home)
-			r.Get("/channel", c.AdminSettingChannelController.Home)
+			r.Route("/channel", func(r chi.Router) {
+				r.Get("/", c.AdminSettingChannelController.Home)
+				r.Post("/send-message", c.AdminSettingChannelController.SendMessage)
+				r.Post("/logout", c.AdminSettingChannelController.Logout)
+			})
 		})
 	})
 }

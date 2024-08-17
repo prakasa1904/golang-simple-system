@@ -5,6 +5,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 	"github.com/prakasa1904/panji-express/internal/delivery/http"
+	"github.com/prakasa1904/panji-express/internal/services/whatsapp"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
@@ -20,12 +21,17 @@ type BootstrapConfig struct {
 }
 
 func Bootstrap(config *BootstrapConfig) {
+	// init global repository
+	waRepository := whatsapp.NewRepository(config.Config, config.Log)
+
+	// run background from setting channel
+	go waRepository.Run()
+
 	// HTTP Delivery Protocol
 	homeController := http.NewHomeController(config.DB, config.Log, config.View, config.Validate)
 	findController := http.NewFindController(config.DB, config.Log, config.View, config.Validate)
 	aboutController := http.NewAboutController(config.DB, config.Log, config.View, config.Validate)
 	serviceController := http.NewServiceController(config.DB, config.Log, config.View, config.Validate)
-	whatsappController := http.NewWhatsappController(config.Config, config.Log, config.View)
 	memberAPIController := http.NewMemberAPIController(config.DB, config.Log, config.View, config.Validate)
 	qrController := http.NewQRController(config.Config, config.Log)
 
@@ -52,6 +58,7 @@ func Bootstrap(config *BootstrapConfig) {
 		config.Config.GetString("view.administrator"),
 	)
 	adminOrderController := http.NewAdminOrderController(
+		waRepository,
 		config.DB,
 		config.Log,
 		config.View,
@@ -66,7 +73,7 @@ func Bootstrap(config *BootstrapConfig) {
 		config.Config.GetString("view.administrator"),
 	)
 	adminSettingChannelController := http.NewAdminSettingChannelController(
-		config.Config,
+		waRepository,
 		config.DB,
 		config.Log,
 		config.View,
@@ -80,7 +87,6 @@ func Bootstrap(config *BootstrapConfig) {
 		AboutController:               aboutController,
 		HomeController:                homeController,
 		ServiceController:             serviceController,
-		WhatsappController:            whatsappController,
 		MemberAPIController:           memberAPIController,
 		QRController:                  qrController,
 		AdminDashboardController:      adminDashboardController,
