@@ -20,11 +20,12 @@ type RouteConfig struct {
 	QRController       *QRController
 
 	// admin controller
-	AdminDashboardController *AdminDashboardController
-	AdminGroupController     *AdminGroupController
-	AdminMemberController    *AdminMemberController
-	AdminOrderController     *AdminOrderController
-	AdminSettingController   *AdminSettingController
+	AdminDashboardController      *AdminDashboardController
+	AdminGroupController          *AdminGroupController
+	AdminMemberController         *AdminMemberController
+	AdminOrderController          *AdminOrderController
+	AdminSettingController        *AdminSettingController
+	AdminSettingChannelController *AdminSettingChannelController
 
 	// register API by service
 	MemberAPIController *MemberAPIController
@@ -136,6 +137,7 @@ func (c *RouteConfig) SetupAdminRoute(view *render.Engine) {
 		// etc...
 		r.Route("/setting", func(r chi.Router) {
 			r.Get("/", c.AdminSettingController.Home)
+			r.Get("/channel", c.AdminSettingChannelController.Home)
 		})
 	})
 }

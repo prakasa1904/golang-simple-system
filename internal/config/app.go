@@ -20,6 +20,7 @@ type BootstrapConfig struct {
 }
 
 func Bootstrap(config *BootstrapConfig) {
+	// HTTP Delivery Protocol
 	homeController := http.NewHomeController(config.DB, config.Log, config.View, config.Validate)
 	findController := http.NewFindController(config.DB, config.Log, config.View, config.Validate)
 	aboutController := http.NewAboutController(config.DB, config.Log, config.View, config.Validate)
@@ -64,21 +65,30 @@ func Bootstrap(config *BootstrapConfig) {
 		config.Validate,
 		config.Config.GetString("view.administrator"),
 	)
+	adminSettingChannelController := http.NewAdminSettingChannelController(
+		config.Config,
+		config.DB,
+		config.Log,
+		config.View,
+		config.Validate,
+		config.Config.GetString("view.administrator"),
+	)
 
 	route := &http.RouteConfig{
-		Router:                   config.Router,
-		FindController:           findController,
-		AboutController:          aboutController,
-		HomeController:           homeController,
-		ServiceController:        serviceController,
-		WhatsappController:       whatsappController,
-		MemberAPIController:      memberAPIController,
-		QRController:             qrController,
-		AdminDashboardController: adminDashboardController,
-		AdminGroupController:     adminGroupController,
-		AdminMemberController:    adminMemberController,
-		AdminOrderController:     adminOrderController,
-		AdminSettingController:   adminSettingController,
+		Router:                        config.Router,
+		FindController:                findController,
+		AboutController:               aboutController,
+		HomeController:                homeController,
+		ServiceController:             serviceController,
+		WhatsappController:            whatsappController,
+		MemberAPIController:           memberAPIController,
+		QRController:                  qrController,
+		AdminDashboardController:      adminDashboardController,
+		AdminGroupController:          adminGroupController,
+		AdminMemberController:         adminMemberController,
+		AdminOrderController:          adminOrderController,
+		AdminSettingController:        adminSettingController,
+		AdminSettingChannelController: adminSettingChannelController,
 	}
 
 	// init registered router
