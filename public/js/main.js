@@ -93,10 +93,7 @@ htmx.defineExtension("debug", {
 // flowbite init every visit another page
 htmx.defineExtension("flowbite", {
   onEvent: function (name, e) {
-    console.log("name: ", name);
-
     if (name === "htmx:xhr:loadend") {
-      console.log("re-install Flowbite every page");
       initFlowbite();
     }
   },
@@ -122,16 +119,27 @@ htmx.defineExtension("flowbite-drawer", {
 });
 
 // qr code
-let qrTarget = document.getElementById("qrsrt");
-if (qrTarget) {
-  let qrContent = qrTarget.textContent;
-  var qrcode = new QRCode(document.getElementById("qrcode"), {
-    text: qrContent,
-    width: 400,
-    height: 400,
-    correctLevel: QRCode.CorrectLevel.L,
-  });
+function generateQRCode() {
+  console.log("generateQRCode")
+  let qrTarget = document.getElementById("qrsrt");
+  if (qrTarget) {
+    let qrContent = qrTarget.textContent;
+    
+    new QRCode(document.getElementById("qrcode"), {
+      text: qrContent,
+      width: 400,
+      height: 400,
+      correctLevel: QRCode.CorrectLevel.L,
+    });
+  }
 }
+
+
+window.onload = function () {
+  console.log("Try to generate QRCode When Doc Ready")
+  generateQRCode();
+};
+
 
 // hide drawer
 function showDrawer(drawer) {

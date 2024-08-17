@@ -14,6 +14,7 @@ import (
 	"go.mau.fi/whatsmeow/proto/waE2E"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"go.mau.fi/whatsmeow/types"
+	"go.mau.fi/whatsmeow/types/events"
 	waLog "go.mau.fi/whatsmeow/util/log"
 	"google.golang.org/protobuf/proto"
 )
@@ -71,7 +72,7 @@ func NewRepository(config *viper.Viper, log *logrus.Logger) *Repository {
 	}
 
 	// consider this section, do we need to listen whatsApp event ?
-	whatsApp.AddEventHandler(waHandler)
+	whatsApp.AddEventHandler(waHandler(whatsApp))
 	// consider this section, do we need to listen whatsApp event ?
 
 	return &Repository{
@@ -136,30 +137,64 @@ func (w *Repository) SendMessage(receiver string, message string) {
 
 }
 
+func (w *Repository) Logout() error {
+	err := w.instance.Logout()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // whatsApp interface handler
 // WA event handler, listen all websocket event from whatsApp
-func waHandler(rawEvt interface{}) {
-	log.Println("rawEvt Triggered!")
+func waHandler(wa *whatsmeow.Client) whatsmeow.EventHandler {
+
+	return func(rawEvt interface{}) {
+		// log.Println("rawEvt Triggered!")
+		switch evt := rawEvt.(type) {
+		case *events.Connected, *events.PushNameSetting:
+			if len(wa.Store.PushName) == 0 {
+				return
+			}
+			// Send presence available when connecting and when the pushname is changed.
+			// This makes sure that outgoing messages always have the right pushname.
+			err := wa.SendPresence(types.PresenceAvailable)
+			if err != nil {
+				log.Printf("Failed to send available presence: %v", err)
+			} else {
+				log.Printf("Marked self as available")
+			}
+		case *events.Receipt:
+			if evt.Type == types.ReceiptTypeRead || evt.Type == types.ReceiptTypeReadSelf {
+				log.Printf("%v was read by %s at %s", evt.MessageIDs, evt.SourceString(), evt.Timestamp)
+			} else if evt.Type == types.ReceiptTypeDelivered {
+				log.Printf("%s was delivered to %s at %s", evt.MessageIDs[0], evt.SourceString(), evt.Timestamp)
+			}
+		case *events.StreamReplaced:
+			log.Println(evt.PermanentDisconnectDescription())
+		}
+	}
 }
 
 // WA input handler, listen user input and interact with whatsApp
 func handleCmd(waInstance *whatsmeow.Client, cmd waEvent) {
 	switch cmd.event {
 	case "send":
-		if waInstance.IsLoggedIn() && waInstance.IsConnected() {
-			log.Println("cmd.message: ", cmd.message)
-			log.Println("cmd.number: ", cmd.number)
+		// if waInstance.IsLoggedIn() && waInstance.IsConnected() {
+		log.Println("cmd.message: ", cmd.message)
+		log.Println("cmd.number: ", cmd.number)
 
-			msg := &waE2E.Message{Conversation: proto.String(cmd.message)}
-			JID := types.NewJID(cmd.number, types.DefaultUserServer)
+		msg := &waE2E.Message{Conversation: proto.String(cmd.message)}
+		JID := types.NewJID(cmd.number, types.DefaultUserServer)
 
-			resp, err := waInstance.SendMessage(context.TODO(), JID, msg)
-			if err != nil {
-				log.Printf("Error sending message: %v", err)
-			} else {
-				log.Printf("Message sent (server timestamp: %s)", resp.Timestamp)
-			}
+		resp, err := waInstance.SendMessage(context.TODO(), JID, msg)
+		if err != nil {
+			log.Printf("Error sending message: %v", err)
+		} else {
+			log.Printf("Message sent (server timestamp: %s)", resp.Timestamp)
 		}
+		// }
 	case "logout":
 		err := waInstance.Logout()
 		if err != nil {

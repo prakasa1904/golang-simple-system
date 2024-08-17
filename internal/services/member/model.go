@@ -10,6 +10,7 @@ import (
 type Response struct {
 	ID              int64          `json:"id,omitempty"`
 	Fullname        string         `json:"fullname,omitempty"`
+	Phone           string         `json:"phone,omitempty"`
 	Email           string         `json:"email,omitempty"`
 	Username        string         `json:"username,omitempty"`
 	Password        string         `json:"password,omitempty"`
@@ -25,6 +26,7 @@ type RequestPayload struct {
 	ID              uint64 `json:"id"`
 	Fullname        string `json:"fullname"`
 	Username        string `json:"username" validate:"max=100"`
+	Phone           string `json:"phone" validate:"required,max=100"`
 	Email           string `json:"email" validate:"required,max=100"`
 	Password        string `json:"password"`
 	ConfirmPassword string `json:"confirm_password"`

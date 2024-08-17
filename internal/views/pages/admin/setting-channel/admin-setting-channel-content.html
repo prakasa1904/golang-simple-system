@@ -1,29 +1,74 @@
 <div
-  class="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600"
+  class="p-4 mb-4 space-y-6 bg-white shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800"
 >
   <div
-    class="p-4 mb-4 space-y-6 bg-white shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800"
+    class="px-4 py-2 text-gray-400 border border-gray-200 border-dashed dark:border-gray-600"
   >
-    <div
-      class="px-4 py-2 text-gray-400 border border-gray-200 border-dashed dark:border-gray-600"
+    <a
+      href="/admin/setting/channel"
+      hx-post="/admin/setting/channel/logout"
+      hx-ext="flowbite"
+      hx-push-url="/admin/setting/channel"
+      hx-swap="innerHTML"
+      hx-target="#main-content"
+      hx-on::after-request="generateQRCode();"
+      ><h3>Logout</h3>
+    </a>
+  </div>
+  <div
+    class="px-4 py-2 text-gray-400 border border-gray-200 border-dashed dark:border-gray-600"
+  >
+    <form
+      method="POST"
+      action="/admin/setting/channel/send-message"
+      hx-post="/admin/setting/channel/send-message"
+      hx-swap="innerHTML"
+      hx-ext="json-enc,refetch-url"
+      hx-on::after-request="initDismisses(); this.reset();"
+      hx-refetch-url="/admin/setting/channel"
+      hx-refetch-method="GET"
+      hx-refetch-target="#main-content"
+      hx-refetch-with-query="true"
     >
-      <h3>Login</h3>
-    </div>
-    <div
-      id="qrsrt"
-      class="h-32 px-4 py-2 text-gray-400 border border-gray-200 border-dashed dark:border-gray-600"
-    >
-      <%= qrcode %>
-    </div>
-    <div
-      class="px-4 py-2 text-gray-400 border border-gray-200 border-dashed dark:border-gray-600"
-    >
-      <div id="qrcode"></div>
-    </div>
-    <div
-      class="px-4 py-2 text-gray-400 border border-gray-200 border-dashed dark:border-gray-600"
-    >
-      <h3>Card footer</h3>
-    </div>
+      <div class="grid grid-cols-1 gap-1">
+        <div class="col-span-full sm:col-span-full">
+          <label
+            for="receiver"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Penerima</label
+          >
+          <input
+            type="number"
+            name="receiver"
+            id="receiver"
+            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            placeholder="e.g. +(12)3456 789"
+            required=""
+          />
+        </div>
+        <div class="col-span-full sm:col-span-full">
+          <label
+            for="first-name"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Pesan</label
+          >
+          <textarea
+            id="message"
+            rows="4"
+            name="message"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            placeholder="Masukkan pesan anda"
+          ></textarea>
+        </div>
+        <div class="col-span-full sm:col-full">
+          <button
+            class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            type="submit"
+          >
+            Kirim
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>

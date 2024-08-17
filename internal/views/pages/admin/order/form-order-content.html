@@ -6,6 +6,8 @@
   order
 </h5>
 <form
+  method="POST"
+  action="/admin/order/mutation/<%= action %>"
   hx-target="#global-toaster"
   hx-swap="innerHTML"
   hx-post="/admin/order/mutation/<%= action %>"

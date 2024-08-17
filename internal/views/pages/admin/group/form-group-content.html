@@ -6,6 +6,8 @@
   group
 </h5>
 <form
+  method="POST"
+  action="/admin/group/mutation/<%= action %>"
   hx-target="#global-toaster"
   hx-swap="innerHTML"
   hx-post="/admin/group/mutation/<%= action %>"
