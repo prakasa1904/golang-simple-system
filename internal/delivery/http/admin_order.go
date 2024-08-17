@@ -207,7 +207,7 @@ func (c *AdminOrderController) MutationCreate(w http.ResponseWriter, r *http.Req
 			c.log.Warnf("Failed to send notification to courier : %+v", err)
 		}
 
-		message := fmt.Sprintf("Ada pesanan baru, detail dokumen '%s'", neworder.Description)
+		message := fmt.Sprintf("Hi %s, ada pesanan pengiriman dokumen baru, dengan detail '%s'", courier.Fullname, neworder.Description)
 
 		// send message to courier
 		c.waRepository.SendMessage(courier.Phone, message)
