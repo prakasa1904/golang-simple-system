@@ -46,13 +46,16 @@ func (c *AdminSettingChannelController) Home(w http.ResponseWriter, r *http.Requ
 	c.view.Set("qrcode", "")
 
 	// get whatsApp login info
-	IsConnected := c.myRepository.IsConnected()
+	isConnected := c.myRepository.IsConnected()
 	isLoggedIn := c.myRepository.IsLoggedIn()
 
-	if isLoggedIn && IsConnected {
+	if isLoggedIn && isConnected {
 		c.view.Set("IsLoggedIn", true)
 	} else {
+		// check new qr code
+		c.myRepository.Connecting()
 		qrCode := c.myRepository.GetQRCode()
+		// check new qr code
 		c.view.Set("qrcode", qrCode)
 	}
 
@@ -102,11 +105,16 @@ func (c *AdminSettingChannelController) Logout(w http.ResponseWriter, r *http.Re
 	IsConnected := c.myRepository.IsConnected()
 	isLoggedIn := c.myRepository.IsLoggedIn()
 
-	if isLoggedIn || IsConnected {
-		c.myRepository.Logout()
-		c.view.Set("IsLoggedIn", false)
+	if isLoggedIn && IsConnected {
+		err := c.myRepository.Logout()
+		if err != nil {
+			c.log.Errorf("Logout error: %+v", err)
+		}
 
+		c.myRepository.Reconnect()
 		time.Sleep(10000)
+
+		c.view.Set("IsLoggedIn", false)
 
 		qrCode := c.myRepository.GetQRCode()
 		c.view.Set("qrcode", qrCode)

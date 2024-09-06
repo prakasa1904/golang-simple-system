@@ -42,9 +42,6 @@ func NewAdminOrderController(
 	memberUsecaseRepository := member.NewRepository(log)
 	myRepository := order.NewRepository(log)
 
-	// run background from setting channel
-	// go waRepository.Run()
-
 	// init usecases
 	groupUsecase := group.NewUseCase(db, log, validate, groupRepository)
 	memberUsecase := member.NewUseCase(db, log, validate, memberUsecaseRepository)
